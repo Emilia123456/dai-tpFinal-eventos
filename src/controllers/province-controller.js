@@ -5,6 +5,7 @@ const svc = new ProvinceService();
 
 router.get('', async (req, res) => {
     let respuesta;
+    console.log("Emi")
     const returnArray =await svc.getAllAsync();
     if(returnArray!=null){
         respuesta = res.status(200).json(returnArray);
@@ -17,7 +18,7 @@ router.get('', async (req, res) => {
 router.get('/:id', async (req, res) => {
     let respuesta;
     let id = req.params.id;
-    const returnEntity =await svc.getByIdAsync(id);
+    const returnEntity =await svc.getById(id);
     if(returnEntity!=null){
         respuesta = res.status(200).json(returnEntity);
     }else{
@@ -58,3 +59,6 @@ router.delete('id', async (req, res) => {
     }
     return respuesta;
 });
+
+
+export default router;

@@ -40,8 +40,8 @@ export default class ProvinceRepository {
         return returnArray;
     }
 
-    insertProvince = async (entity) =>{
-        let returnArray =null;
+    insertProvince = async (name, full_name, latitude, longitude, display_order) =>{
+        let returnArray = null;
         const client = new Client(config_provinces);
         try {
             await client.connect();
@@ -52,12 +52,13 @@ export default class ProvinceRepository {
             const valores = [name, full_name, latitude, longitude, display_order]; 
             const resultado = await client.query(sql, valores); 
             await client.end();
-            returnArray = result.rows;
+            returnArray = resultado.rows;
         } catch (error){
             console.log(error);
         }
         return returnArray;
     }
+    
 
     updateProvince = async (entity) =>{
         let returnArray =null;

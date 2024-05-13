@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import ProvinceRouter from "express";
+import ProvinceRouter from "./src/controllers/province-controller.js"
 
 const app = express(); 
 const port=3001; 
