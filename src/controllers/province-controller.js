@@ -5,7 +5,6 @@ const svc = new ProvinceService();
 
 router.get('', async (req, res) => {
     let respuesta;
-    console.log("Emi")
     const returnArray =await svc.getAllAsync();
     if(returnArray!=null){
         respuesta = res.status(200).json(returnArray);
@@ -30,7 +29,6 @@ router.get('/:id', async (req, res) => {
 router.post('', async (req, res) => {
     let respuesta;
     const datosProvincia = req.body
-    console.log(datosProvincia)
     const returnEntity = await svc.insertProvince(datosProvincia);
     
     try{
@@ -60,14 +58,11 @@ router.delete('/:id', async (req, res) => {
     // VAmos a buscarlo! (provAEliminar)
     const returnEntity = await svc.getById(provAEliminar); 
     if (returnEntity != null){
-
         const rowsAffected =await svc.deleteProvince(provAEliminar);
-    
         respuesta = res.status(200).json(rowsAffected);
     }else{
         respuesta=res.status(404).send(`not found`);
     }
-    
     return respuesta;
 });
 
