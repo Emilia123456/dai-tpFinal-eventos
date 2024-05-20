@@ -40,7 +40,7 @@ export default class ProvinceRepository {
         return returnArray;
     }
 
-    insertProvince = async (name, full_name, latitude, longitude, display_order) =>{
+    insertProvince = async (entity) =>{
         let returnArray = null;
         const client = new Client(config_provinces);
         try {
@@ -49,7 +49,7 @@ export default class ProvinceRepository {
             VALUES                
                 ($1, $2, $3, $4, $5)`; // Array con los valores.
         
-            const valores = [name, full_name, latitude, longitude, display_order]; 
+            const valores = [entity.name, entity.full_name, entity.latitude, entity.longitude, entity.display_order]; 
             const resultado = await client.query(sql, valores); 
             await client.end();
             returnArray = resultado.rows;
@@ -65,20 +65,18 @@ export default class ProvinceRepository {
         const client = new Client(config_provinces);
         try {
             await client.connect();
-            let sql = `UPDATE provinces SET (name=$2, full_name=$3, latitude=$4, longitude=$5, display_order=$6 WHERE id=$1)            
-            VALUES                
-                ($1, $2, $3, $4, $5)`; // Array con los valores.
+            let sql = `UPDATE provinces SET name=$2, full_name=$3, latitude=$4, longitude=$5, display_order=$6 WHERE id=$1`; 
         
                 const values = [
-                    ProvinceData.id,
-                    ProvinceData.name,
-                    ProvinceData.full_name,
-                    ProvinceData.latitude,
-                    ProvinceData.longitude,
-                    ProvinceData.display_order,
+                    entity.id,
+                    entity.name,
+                    entity.full_name,
+                    entity.latitude,
+                    entity.longitude,
+                    entity.display_order,
                 ];  
                 const result = await client.query(sql, values);
-                return result.rows; 
+                return result.rowCount; 
             await client.end();
             returnArray = result.rows;
         } catch (error){
@@ -87,17 +85,21 @@ export default class ProvinceRepository {
         return returnArray;
     }
 
-    deleteProvince = async (id) =>{
+    deleteProvince = async (provAEliminar) =>{
         let returnArray =null;
         const client = new Client(config_provinces);
+        
         try {
             await client.connect();
-            let sql = 'DELETE from provinces WHERE name=$1'; // Array con los valores. 
-            const parametro = [name]; 
-            const output = await client.query(sql, parametro); 
-            return output;
+            console.log(provAEliminar)
+            let sql = 'DELETE from provinces WHERE id=$1'; // Array con los valores. 
+            //const parametro = [provAEliminar.id]; 
+        
+            const output = await client.query(sql, provAEliminar.id); 
+            return output.rowCount;
             await client.end();
             returnArray = result.rows;
+            
         } catch (error){
             console.log(error);
         }

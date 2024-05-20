@@ -29,10 +29,14 @@ router.get('/:id', async (req, res) => {
 
 router.post('', async (req, res) => {
     let respuesta;
-    const returnEntity =await svc.insertProvince();
-    if(returnEntity!=null){
-        respuesta = res.status(200).json(returnEntity);
-    }else{
+    const datosProvincia = req.body
+    console.log(datosProvincia)
+    const returnEntity = await svc.insertProvince(datosProvincia);
+    
+    try{
+        returnEntity!=null
+        respuesta = res.status(201).json(returnEntity);
+    }catch{
         respuesta=res.status(500).send(`Error interno`);
     }
     return respuesta;
@@ -40,7 +44,8 @@ router.post('', async (req, res) => {
 
 router.put('', async (req, res) => {
     let respuesta;
-    const returnEntity =await svc.updateProvince();
+    const datosProvincia = req.body
+    const returnEntity =await svc.updateProvince(datosProvincia);
     if(returnEntity!=null){
         respuesta = res.status(200).json(returnEntity);
     }else{
@@ -49,9 +54,10 @@ router.put('', async (req, res) => {
     return respuesta;
 });
 
-router.delete('id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     let respuesta;
-    const returnArray =await svc.deleteProvince(id);
+    const provAEliminar = req.params.id;
+    const returnArray =await svc.deleteProvince(provAEliminar);
     if(returnArray!=null){
         respuesta = res.status(200).json(returnArray);
     }else{

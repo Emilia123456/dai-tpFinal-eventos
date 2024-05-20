@@ -2,7 +2,7 @@
 
 const config_provinces = { 
     host        : "localhost",
-    database    : "dai-events",
+    database    : "dai-events-full",
     user        : "postgres", 
     password    : "root", 
     port        : 5432 

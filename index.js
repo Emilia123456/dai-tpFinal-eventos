@@ -11,6 +11,7 @@ app.use(express.json());
 //app.use('/front', express.static('public));
 //app.use('/api/event', EventRouter);
 app.use('/api/provinces', ProvinceRouter)
+//app.use('/api/category', CategoryRouter)
 //app.use('/api/user', UserRouter);
 //app.use(unknownEndpoint);
 
