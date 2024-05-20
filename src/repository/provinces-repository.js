@@ -24,20 +24,25 @@ export default class ProvinceRepository {
     }
 
     getById = async (id) =>{
-        let returnArray =null;
+        let returnObject = null;
         const client = new Client(config_provinces);
         try {
             await client.connect();
             let sql = 'SELECT * from provinces WHERE id=$1'; // Array con los valores. 
             const values = [id]; 
             let result = await client.query(sql, values); 
-            return result;
+            if(result.rows.length > 0){
+                returnObject = result.rows[0];
+            }
+            
+            
             await client.end();
-            returnArray = result.rows;
+            return returnObject;
+            
         } catch (error){
             console.log(error);
         }
-        return returnArray;
+        return returnObject;
     }
 
     insertProvince = async (entity) =>{
@@ -86,24 +91,23 @@ export default class ProvinceRepository {
     }
 
     deleteProvince = async (provAEliminar) =>{
-        let returnArray =null;
+        let returnValue =0;
         const client = new Client(config_provinces);
         
         try {
             await client.connect();
-            console.log(provAEliminar)
+            console.log('provAEliminar ', provAEliminar)
             let sql = 'DELETE from provinces WHERE id=$1'; // Array con los valores. 
             //const parametro = [provAEliminar.id]; 
-        
-            const output = await client.query(sql, provAEliminar.id); 
+            const values = [provAEliminar];
+
+            const output = await client.query(sql, values); 
             return output.rowCount;
-            await client.end();
-            returnArray = result.rows;
             
         } catch (error){
-            console.log(error);
+            console.log('error', error);
         }
-        return returnArray;
+        return returnValue;
     }
 }
 

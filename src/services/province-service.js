@@ -10,8 +10,8 @@ export default class ProvinceService{
 
     getById = async (id) => {
         const repo = new ProvinceRepository();
-        const returnArray = await repo.getById(id);
-        return returnArray;
+        const returnObject = await repo.getById(id);
+        return returnObject;
     }
 
     insertProvince = async (entity) => {

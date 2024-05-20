@@ -22,7 +22,7 @@ router.get('/:id', async (req, res) => {
     if(returnEntity!=null){
         respuesta = res.status(200).json(returnEntity);
     }else{
-        respuesta=res.status(500).send(`Error interno`);
+        respuesta=res.status(404).send(`Not Found`);
     }
     return respuesta;
 });
@@ -57,12 +57,17 @@ router.put('', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     let respuesta;
     const provAEliminar = req.params.id;
-    const returnArray =await svc.deleteProvince(provAEliminar);
-    if(returnArray!=null){
-        respuesta = res.status(200).json(returnArray);
+    // VAmos a buscarlo! (provAEliminar)
+    const returnEntity = await svc.getById(provAEliminar); 
+    if (returnEntity != null){
+
+        const rowsAffected =await svc.deleteProvince(provAEliminar);
+    
+        respuesta = res.status(200).json(rowsAffected);
     }else{
-        respuesta=res.status(500).send(`Error interno`);
+        respuesta=res.status(404).send(`not found`);
     }
+    
     return respuesta;
 });
 
