@@ -23,7 +23,8 @@ export default class UserService{
 
     insertUser = async (entity) => {
         const repo = new UserRepository();
-        await repo.insertUsert(entity);
+        console.log('Servicio', entity);
+        await repo.insertUser(entity);
     }
 
     updateUser = async (entity) => {

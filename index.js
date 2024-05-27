@@ -18,5 +18,5 @@ app.use('/api/user', UserRouter);
 //app.use(unknownEndpoint);
 
 app.listen(port,()=>{ 
-    console.log(`Exampleapplisteningonport${port}`) 
+    console.log(`Example app listening on port${port}`) 
 })

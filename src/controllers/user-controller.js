@@ -3,7 +3,7 @@ import { Router } from "express";
 import UserService from '../services/user-service.js'
 const router = Router();
 const svc = new UserService();
-
+/*
 const payLoad ={
     id: 123,
     username: 'pipa'
@@ -18,10 +18,11 @@ const options = {
 
 const token = jwt.sign(payLoad, secretKey, options);
 console.log(token);
-
-router.post('', async (req, res) => {
+*/
+router.post('/login', async (req, res) => {
     let response;
     const userData = req.body
+    console.log('controller login' , userData);
     const returnEntity = await svc.loginUser(userData)
     try{
         returnEntity!=null
@@ -55,9 +56,10 @@ router.get('/:id', async (req, res) => {
     return respuesta;
 });
 
-router.post('', async (req, res) => {
+router.post('/register', async (req, res) => {
     let response;
     const userData = req.body
+    console.log('Controller', userData);
     const returnEntity = await svc.insertUser(userData)
     try{
         returnEntity!=null

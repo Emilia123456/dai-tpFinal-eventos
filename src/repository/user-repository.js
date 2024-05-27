@@ -34,6 +34,8 @@ export default class UserRepository {
             let result = await client.query(sql, values); 
             if(result.rows.length > 0){
                 returnObject = result.rows[0];
+            }else{
+                console.log('error', error);
             }
             await client.end();
             return returnObject;
@@ -48,14 +50,12 @@ export default class UserRepository {
         const client = new Client(config_user);
         try {
             await client.connect();
-            let sql = `INSERT INTO users (username, password)            
-            VALUES                
-                ($1, $2)`; // Array con los valores.
+            let sql = `SELECT * FROM users WHERE username=$1 AND password=$2`; // Array con los valores.
         
             const values = [entity.username, entity.password]; 
             const result = await client.query(sql, values); 
             await client.end();
-            returnArray = result.rows;
+            returnArray = result.row;
         } catch (error){
             console.log(error);
         }
@@ -63,6 +63,7 @@ export default class UserRepository {
     }
 
     insertUser = async (entity) =>{
+        console.log('Repo', entity);
         let returnArray = null;
         const client = new Client(config_user);
         try {
