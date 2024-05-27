@@ -56,19 +56,40 @@ router.get('/:id', async (req, res) => {
     return respuesta;
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res) => { //no funciona i
     let response;
     const userData = req.body
     console.log('Controller', userData);
     const returnEntity = await svc.insertUser(userData)
+    
     try{
-        returnEntity!=null
-        response = res.status(201).json(returnEntity);
+        if (!userData.first_name || userData.first_name.length < 3) {
+            return res.status(400).json({ error: "El campo 'Nombre' debe tener al menos 3 caracteres." });
+        } else if (!userData.last_name || userData.last_name.length < 3){
+            return res.status(400).json({ error: "El campo 'Apellido' debe tener al menos 3 caracteres." });
+        }else if (!userData.password || userData.password.length < 3){
+            return res.status(400).json({ error: "El campo 'Contraseña' debe tener al menos 3 caracteres." }); 
+        }
+            //ARREGLAR EL GMAIL
+                    // if (!userData.username || !isValidEmail(userData.username)) {
+                    //     return res.status(400).json({ error: "El campo 'Username' debe ser un correo electrónico válido." });
+                    // }
+
+        if(returnEntity!=null){
+            response = res.status(201).json(returnEntity);
+            return response;
+        }
+        
+
     }catch{
-        response=res.status(500).send(`Error interno`);
+        
+        response=res.status(400).send(`Error interno`);
+        return response;
     }
-    return response;
+
+    
 });
+
 
 router.put('', async (req, res) => {
     let response;
