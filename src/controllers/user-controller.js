@@ -73,10 +73,10 @@ router.post('/register', async (req, res) => { //no funciona i
         }else if (!userData.password || userData.password.length < 3){
             return res.status(400).json({ error: "El campo 'Contraseña' debe tener al menos 3 caracteres." }); 
         }
-            //ARREGLAR EL GMAIL
-                    // if (!userData.username || !isValidEmail(userData.username)) {
-                    //     return res.status(400).json({ error: "El campo 'Username' debe ser un correo electrónico válido." });
-                    // }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!userData.username || emailRegex==(userData.username)) {
+            return res.status(400).json({ error: "El campo 'Username' debe ser un correo electrónico válido." });
+         }
         const returnValue = await svc.insertUser(userData)
         if(returnValue!=null){
             response = res.status(201).json(returnValue);
