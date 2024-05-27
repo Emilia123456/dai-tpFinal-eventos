@@ -46,7 +46,7 @@ export default class UserRepository {
     }
 
     loginUser = async (entity) =>{
-        let returnArray = null;
+        let returnEntity = null;
         const client = new Client(config_user);
         try {
             await client.connect();
@@ -55,16 +55,18 @@ export default class UserRepository {
             const values = [entity.username, entity.password]; 
             const result = await client.query(sql, values); 
             await client.end();
-            returnArray = result.row;
+            if(result.rows.length > 0){
+                returnEntity = result.rows[0];
+            }
         } catch (error){
             console.log(error);
         }
-        return returnArray;
+        return returnEntity;
     }
 
     insertUser = async (entity) =>{
         console.log('Repo', entity);
-        let returnArray = null;
+        let returnValue = 0;
         const client = new Client(config_user);
         try {
             await client.connect();
@@ -75,11 +77,11 @@ export default class UserRepository {
             const values = [entity.first_name, entity.last_name,entity.username, entity.password]; 
             const result = await client.query(sql, values); 
             await client.end();
-            returnArray = result.rows;
+            returnValue = result.rowCount; //retorna la cantidad de elementos afectados
         } catch (error){
             console.log(error);
         }
-        return returnArray;
+        return returnValue;
     }
     
 

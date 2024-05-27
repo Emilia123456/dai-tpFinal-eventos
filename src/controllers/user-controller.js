@@ -3,32 +3,35 @@ import { Router } from "express";
 import UserService from '../services/user-service.js'
 const router = Router();
 const svc = new UserService();
-/*
-const payLoad ={
-    id: 123,
-    username: 'pipa'
-};
 
-const secretKey = 'clave$'
-
-const options = {
-    expiresIn: '1h',
-    issuer: 'mi_organizacion'
-};
-
-const token = jwt.sign(payLoad, secretKey, options);
-console.log(token);
-*/
 router.post('/login', async (req, res) => {
     let response;
     const userData = req.body
     console.log('controller login' , userData);
     const returnEntity = await svc.loginUser(userData)
-    try{
-        returnEntity!=null
-        response = res.status(200).json(returnEntity);
-    }catch{
-        response=res.status(401).send(`Unauthorized`);
+    console.log('controller despues del login' , returnEntity);
+    if (returnEntity !=null){
+        const secretKey = 'clave$'
+
+        const options = {
+            expiresIn: '1h',
+            issuer: 'ORT ' 
+        };
+
+        const token = jwt.sign(returnEntity, secretKey, options);
+
+
+        response = res.status(200).json({
+            "success": true,
+            "message": "",
+            "token"  : token
+         });
+    } else {
+        response=res.status(401).send({
+            "success": false,
+            "message": "Usuario o clave inválida.",
+            "token"  : ""
+         });
     }
     return response;
 })
@@ -60,7 +63,7 @@ router.post('/register', async (req, res) => { //no funciona i
     let response;
     const userData = req.body
     console.log('Controller', userData);
-    const returnEntity = await svc.insertUser(userData)
+    
     
     try{
         if (!userData.first_name || userData.first_name.length < 3) {
@@ -74,11 +77,15 @@ router.post('/register', async (req, res) => { //no funciona i
                     // if (!userData.username || !isValidEmail(userData.username)) {
                     //     return res.status(400).json({ error: "El campo 'Username' debe ser un correo electrónico válido." });
                     // }
-
-        if(returnEntity!=null){
-            response = res.status(201).json(returnEntity);
-            return response;
+        const returnValue = await svc.insertUser(userData)
+        if(returnValue!=null){
+            response = res.status(201).json(returnValue);
+            
+        } else {
+            response  = res.status(500).json({ error: "Algo raro paso aca!!" }); 
         }
+        
+        // "emigmail"
         
 
     }catch{

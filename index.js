@@ -3,7 +3,7 @@ import cors from "cors";
 import ProvinceRouter from "./src/controllers/province-controller.js"
 import CategoryRouter from "./src/controllers/category-controller.js"
 import UserRouter from "./src/controllers/user-controller.js"
-import LoginRouter from "./src/controllers/login-controller.js"
+//import LoginRouter from "./src/controllers/login-controller.js"
 
 const app = express(); 
 const port=3001; 
@@ -16,7 +16,7 @@ app.use(express.json());
 app.use('/api/provinces', ProvinceRouter)
 app.use('/api/category', CategoryRouter)
 app.use('/api/user', UserRouter);
-app.use('/api/login', LoginRouter);
+//app.use('/api/login', LoginRouter);
 //app.use(unknownEndpoint);
 
 app.listen(port,()=>{ 
