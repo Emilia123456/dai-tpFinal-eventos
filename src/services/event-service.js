@@ -1,4 +1,4 @@
-import EventRepository from "../repository/event-repository.js";
+import EventRepository from "../repository/event-respository.js";
 
 export default class EventService{
 
@@ -12,6 +12,30 @@ export default class EventService{
     getById = async (id) => {
         const repo = new EventRepository();
         const returnObject = await repo.getById(id);
+        return returnObject;
+    }
+
+    getByName = async (name) => {
+        const repo = new EventRepository();
+        const returnObject = await repo.getByName(name);
+        return returnObject;
+    }
+
+    getByCategory = async (name) => {
+        const repo = new EventRepository();
+        const returnObject = await repo.getByCategory(name);
+        return returnObject;
+    }
+
+    getByStartDate = async (startDate) => {
+        const repo = new EventRepository();
+        const returnObject = await repo.getByStartDate(startDate);
+        return returnObject;
+    }
+
+    getByTag = async (tag) => {
+        const repo = new EventRepository();
+        const returnObject = await repo.getByTag(tag);
         return returnObject;
     }
 

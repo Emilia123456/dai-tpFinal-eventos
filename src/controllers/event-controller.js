@@ -27,6 +27,55 @@ router.get('/:id', async (req, res) => {
     return respuesta;
 });
 
+router.get('/:name', async (req, res) => {
+    let respuesta;
+    let name = req.params.name;
+    const returnEntity =await svc.getByName(name);
+    if(returnEntity!=null){
+        respuesta = res.status(200).json(returnEntity);
+    }else{
+        respuesta=res.status(404).send(`Not Found`);
+    }
+    return respuesta;
+});
+// api/events?category=reci&first_name=emi
+// api/events?last_name=pipa&attendeded=1%djfhas
+router.get('/:category', async (req, res) => {
+    let respuesta;
+    let category = req.query.category;
+    const returnEntity =await svc.getByCategory(category);
+    if(returnEntity!=null){
+        respuesta = res.status(200).json(returnEntity);
+    }else{
+        respuesta=res.status(404).send(`Not Found`);
+    }
+    return respuesta;
+});
+
+router.get('/:startDate', async (req, res) => {
+    let respuesta;
+    let startDate = req.params.startDate;
+    const returnEntity =await svc.getByStartDate(startDate);
+    if(returnEntity!=null){
+        respuesta = res.status(200).json(returnEntity);
+    }else{
+        respuesta=res.status(404).send(`Not Found`);
+    }
+    return respuesta;
+});
+
+router.get('/:tag', async (req, res) => {
+    let respuesta;
+    let tag = req.params.tag;
+    const returnEntity =await svc.getByTag(tag);
+    if(returnEntity!=null){
+        respuesta = res.status(200).json(returnEntity);
+    }else{
+        respuesta=res.status(404).send(`Not Found`);
+    }
+    return respuesta;
+});
+
 router.post('', async (req, res) => {
     let response;
     const dataEvent = req.body
