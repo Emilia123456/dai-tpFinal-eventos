@@ -1,7 +1,7 @@
 import { Router } from "express";
-import CategoryService from '../services/event-service.js'
+import EventService from '../services/event-service.js'
 const router = Router();
-const svc = new CategoryService();
+const svc = new EventService();
 
 router.get('', async (req, res) => {
     let respuesta;
@@ -29,8 +29,8 @@ router.get('/:id', async (req, res) => {
 
 router.post('', async (req, res) => {
     let response;
-    const dataCategory = req.body
-    const returnEntity = await svc.insertEvent(dataCategory)
+    const dataEvent = req.body
+    const returnEntity = await svc.insertEvent(dataEvent)
     try{
         returnEntity!=null
         response = res.status(201).json(returnEntity);
@@ -42,8 +42,8 @@ router.post('', async (req, res) => {
 
 router.put('', async (req, res) => {
     let response;
-    const dataCategory = req.body
-    const returnEntity =await svc.updateEvent(dataCategory);
+    const dataEvent = req.body
+    const returnEntity =await svc.updateEvent(dataEvent);
     if(returnEntity!=null){
         response = res.status(200).json(returnEntity);
     }else{
@@ -54,10 +54,10 @@ router.put('', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     let response;
-    const categoryToEliminate = req.params.id;
-    const returnEntity = await svc.getById(categoryToEliminate); 
+    const eventToEliminate = req.params.id;
+    const returnEntity = await svc.getById(eventToEliminate); 
     if (returnEntity != null){
-        const rowsAffected =await svc.deleteEvent(categoryToEliminate);
+        const rowsAffected =await svc.deleteEvent(eventToEliminate);
         response = res.status(200).json(rowsAffected);
     }else{
         response=res.status(404).send(`not found`);

@@ -1,19 +1,17 @@
-//los endpoints
-
-import config_category from '../configs/db-config-event.js';
+import config_event from '../configs/db-config-event.js';
 import pkg from 'pg' 
 const { Client }  = pkg;
-const client = new Client(config_category);
+const client = new Client(config_event);
 await client.connect();
 
-export default class CategoryRepository {
+export default class EventRepository {
     
     getAllAsync = async () =>{
         let returnArray =null;
-        const client = new Client(config_category);
+        const client = new Client(config_event);
         try {
             await client.connect();
-            let sql = `SELECT * from event_categories`; 
+            let sql = `SELECT * from events`; 
             let result = await client.query(sql);
             await client.end();
             returnArray = result.rows;
@@ -26,10 +24,10 @@ export default class CategoryRepository {
 
     getById = async (id) =>{
         let returnObject = null;
-        const client = new Client(config_category);
+        const client = new Client(config_event);
         try {
             await client.connect();
-            let sql = 'SELECT * from event_categories WHERE id=$1'; // Array con los valores. 
+            let sql = 'SELECT * from events WHERE id=$1'; // Array con los valores. 
             const values = [id]; 
             let result = await client.query(sql, values); 
             if(result.rows.length > 0){
@@ -46,16 +44,16 @@ export default class CategoryRepository {
         return returnObject;
     }
 
-    insertCategory = async (entity) =>{
+    insertEvent = async (entity) =>{
         let returnArray = null;
-        const client = new Client(config_category);
+        const client = new Client(config_event);
         try {
             await client.connect();
-            let sql = `INSERT INTO event_categories (name, display_order)            
+            let sql = `INSERT INTO events (name, description, id_event_category, id_event_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user )            
             VALUES                
-                ($1, $2)`; // Array con los valores.
+                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`; // Array con los valores.
         
-            const values = [entity.name, entity.display_order]; 
+            const values = [entity.name, entity.description, entity.id_event_category, entity.id_event_location, entity.start_date, entity.duration_in_minutes, entity.price, entity.enabled_for_enrollment, entity.max_assistance, entity.id_creator_user]; 
             const result = await client.query(sql, values); 
             await client.end();
             returnArray = result.rows;
@@ -66,17 +64,25 @@ export default class CategoryRepository {
     }
     
 
-    updateCategory = async (entity) =>{
+    updateEvent = async (entity) =>{
         let returnArray =null;
-        const client = new Client(config_category);
+        const client = new Client(config_event);
         try {
             await client.connect();
-            let sql = `UPDATE event_categories SET name=$2, display_order=$3 WHERE id=$1`; 
+            let sql = `UPDATE events SET name=$2, description=$3, id_event_category=$4, id_event_location=$5, start_date=$6, duration_in_minutes=$7, price=$8, enabled_for_enrollment=$9, max_assistance=$10, id_creator_user=$11 WHERE id=$1`; 
         
                 const values = [
                     entity.id,
                     entity.name,
-                    entity.display_order,
+                    entity.description, 
+                    entity.id_event_category, 
+                    entity.id_event_location, 
+                    entity.start_date, 
+                    entity.duration_in_minutes, 
+                    entity.price, 
+                    entity.enabled_for_enrollment, 
+                    entity.max_assistance, 
+                    entity.id_creator_user
                 ];  
                 const result = await client.query(sql, values);
                 return result.rowCount; 
@@ -88,14 +94,14 @@ export default class CategoryRepository {
         return returnArray;
     }
 
-    deleteCategory = async (categoryToEliminate) =>{
+    deleteEvent = async (eventToEliminate) =>{
         let returnValue =0;
-        const client = new Client(config_category);
+        const client = new Client(config_event);
         
         try {
             await client.connect();
-            let sql = 'DELETE from event_categories WHERE id=$1'; // Array con los valores. 
-            const values = [categoryToEliminate];
+            let sql = 'DELETE from events WHERE id=$1'; // Array con los valores. 
+            const values = [eventToEliminate];
 
             const output = await client.query(sql, values); 
             return output.rowCount;
@@ -107,7 +113,4 @@ export default class CategoryRepository {
     }
 }
 
-
-  
-
-export {CategoryRepository};
+export {EventRepository};
