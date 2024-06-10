@@ -47,6 +47,27 @@ export default class EventRepository {
         console.log(returnArray)
         return returnArray;
     };
+
+    searchEventById = async (id) => {
+        let returnObject = null;
+        const client = new Client(config_event);
+        try {
+            await client.connect();
+            let sql = 'SELECT * from events WHERE id=$1'; 
+            const values = [id]; 
+            let result = await client.query(sql, values); 
+            if(result.rows.length > 0){
+                returnObject = result.rows[0];
+            }
+            
+            await client.end();
+            return returnObject;
+            
+        } catch (error){
+            console.log(error);
+        }
+        return returnObject;
+    };
     
 
     insertEvent = async (entity) =>{ //necesita autenticacion

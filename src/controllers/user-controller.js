@@ -24,7 +24,7 @@ router.post('/login', async (req, res) => {
             "success": true,
             "message": "",
             "token"  : token
-         });
+        });
 
     } else {
         response=res.status(401).send({

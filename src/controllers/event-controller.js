@@ -1,5 +1,6 @@
 import { Router } from "express";
 import EventService from '../services/event-service.js'
+import authMiddleware from '../middlewares/auth-middleware.js'
 // importo el middleware
 const router = Router();
 const svc = new EventService();
@@ -19,6 +20,19 @@ router.get('', async (req, res) => {
     }
     return respuesta;
 });
+
+router.get('/:id', async (req, res) => {
+    let respuesta;
+    let id = req.params.id;
+    const returnEntity =await svc.searchEventById(id);
+    if(returnEntity!=null){
+        respuesta = res.status(200).json(returnEntity);
+    }else{
+        respuesta=res.status(404).send(`Not Found`);
+    }
+    return respuesta;
+});
+
 
 router.post('', authMiddleware, async (req, res) => {
     let response;

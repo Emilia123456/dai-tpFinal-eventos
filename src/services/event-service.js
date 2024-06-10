@@ -8,6 +8,14 @@ export default class EventService{
         console.log(returnArray) 
         return returnArray;
     }
+
+    searchEventById = async (id) => {
+        const repo = new EventRepository();
+        const returnArray = await repo.searchEventById(id);
+        console.log(returnArray) 
+        return returnArray;
+    }
+
     insertEvent = async (entity) => {
         const repo = new EventRepository();
         await repo.insertEvent(entity);
