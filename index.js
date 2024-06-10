@@ -4,6 +4,7 @@ import ProvinceRouter from "./src/controllers/province-controller.js"
 import CategoryRouter from "./src/controllers/category-controller.js"
 import UserRouter from "./src/controllers/user-controller.js"
 import EventRouter from "./src/controllers/event-controller.js"
+import EnrolmentRouter from "./src/controllers/enrolment-controller.js"
 //import LoginRouter from "./src/controllers/login-controller.js"
 
 const app = express(); 
@@ -17,6 +18,7 @@ app.use('/api/event', EventRouter);
 app.use('/api/provinces', ProvinceRouter)
 app.use('/api/category', CategoryRouter)
 app.use('/api/user', UserRouter);
+app.use('/api/enrolment', EnrolmentRouter);
 //app.use('/api/login', LoginRouter);
 //app.use(unknownEndpoint);
 

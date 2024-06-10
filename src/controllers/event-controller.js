@@ -1,7 +1,6 @@
 import { Router } from "express";
 import EventService from '../services/event-service.js'
 import authMiddleware from '../middlewares/auth-middleware.js'
-// importo el middleware
 const router = Router();
 const svc = new EventService();
 
