@@ -20,10 +20,10 @@ router.get('', async (req, res) => {
     return respuesta;
 });
 
-router.post('', /*authMiddleware*/ async (req, res) => {
+router.post('', authMiddleware, async (req, res) => {
     let response;
     const dataEvent = req.body
-    //dataEvent.id_user_creator = aslkdjaslk
+    dataEvent.id_user_creator = req.user.id
     const returnEntity = await svc.insertEvent(dataEvent)
     try{
         returnEntity!=null
@@ -34,28 +34,40 @@ router.post('', /*authMiddleware*/ async (req, res) => {
     return response;
 });
 
-router.put('', async (req, res) => {
+router.put('', authMiddleware, async (req, res) => {
     let response;
-    const dataEvent = req.body
-    const returnEntity =await svc.updateEvent(dataEvent);
-    if(returnEntity!=null){
-        response = res.status(200).json(returnEntity);
-    }else{
-        response=res.status(500).send(`Error interno`);
-    }
-    return response;
-});
-
-router.delete('/:id', async (req, res) => {
-    let response;
-    const eventToEliminate = req.params.id;
-    const returnEntity = await svc.getById(eventToEliminate); 
-    if (returnEntity != null){
-        const rowsAffected =await svc.deleteEvent(eventToEliminate);
-        response = res.status(200).json(rowsAffected);
+    const dataEvent = req.body 
+    const returnEntity = await svc.updateEvent(dataEvent);
+    if(dataEvent.id_creator_user = req.user.id){
+   
+        if(returnEntity!=null){
+            response = res.status(200).json(returnEntity);
+        }else{
+            response=res.status(500).send(`Error interno`);
+        }
+        return response;
     }else{
         response=res.status(404).send(`not found`);
     }
+});
+
+router.delete('/:id', authMiddleware, async (req, res) => {
+    let response;
+    const eventToEliminate = req.params.id;
+    const returnEntity = await svc.getById(eventToEliminate); 
+    if (returnEntity.id_creator_user = req.user.id){
+
+        if (returnEntity != null){
+            const rowsAffected =await svc.deleteEvent(eventToEliminate);
+            response = res.status(200).json(rowsAffected);
+        }else{
+            response=res.status(404).send(`not found`);
+        }
+
+    }else{
+        response=res.status(404).send(`not found`);
+    }
+
     return response;
 });
 

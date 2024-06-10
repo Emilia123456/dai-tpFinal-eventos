@@ -19,13 +19,13 @@ router.post('/login', async (req, res) => {
         };
 
         const token = jwt.sign(returnEntity, secretKey, options);
-
-
+        
         response = res.status(200).json({
             "success": true,
             "message": "",
             "token"  : token
          });
+
     } else {
         response=res.status(401).send({
             "success": false,
