@@ -6,144 +6,48 @@ await client.connect();
 
 export default class EventRepository {
     
-    getAllAsync = async () =>{
-        let returnArray =null;
+    searchEvent = async (name, category, tag, startDate) => {
+        let returnArray = null;
         const client = new Client(config_event);
         try {
             await client.connect();
-            let sql = `SELECT * from events`; 
+            let sql =  `SELECT e.*
+                        FROM events e
+                        INNER JOIN event_categories ec ON e.id_event_category = ec.id
+                        LEFT JOIN event_tags et ON e.id = et.id_event
+                        LEFT JOIN tags t ON et.id_tag = t.id 
+                        WHERE `; 
+    
+            if (name!=null){
+                sql += `lower(e.name) LIKE lower('%${name}%') AND `; 
+            }
+            if (category!=null){
+                sql += `lower(ec.name) LIKE lower('%${category}%') AND `; 
+            }
+            if (tag!=null){
+                sql += `lower(t.name) LIKE lower('%${tag}%') AND `;
+            }
+            if (startDate!=null){
+                 sql += `e.start_date = '${startDate}' AND `;
+             }
+    
+            // Sacamos el and del final
+            if (sql.endsWith('AND ')) {
+                sql = sql.slice(0, -4); 
+            }
+    
             let result = await client.query(sql);
-            await client.end();
             returnArray = result.rows;
+    
         } catch (error){
             console.log(error);
+        } finally {
+            await client.end();
         }
         console.log(returnArray)
         return returnArray;
-    }
-
-    getById = async (id) =>{
-        let returnObject = null;
-        const client = new Client(config_event);
-        try {
-            await client.connect();
-            let sql = 'SELECT * from events WHERE id=$1'; // Array con los valores. 
-            const values = [id]; 
-            let result = await client.query(sql, values); 
-            if(result.rows.length > 0){
-                returnObject = result.rows[0];
-            }
-            
-            
-            await client.end();
-            return returnObject;
-            
-        } catch (error){
-            console.log(error);
-        }
-        return returnObject;
-    }
-
-    getByName = async (name) =>{
-        let returnObject = null;
-        const client = new Client(config_event);
-        try {
-            await client.connect();
-            let sql = 'SELECT * from events WHERE name=$1'; // Array con los valores. 
-            const values = [name]; 
-            let result = await client.query(sql, values); 
-            if(result.rows.length > 0){
-                returnObject = result.rows[0];
-            }
-            await client.end();
-            return returnObject;
-            
-        } catch (error){
-            console.log(error);
-        }
-        return returnObject;
-    }
-
-    getByCategory = async (category) =>{
-        let returnObject = null;
-        const client = new Client(config_event);
-        try {
-            await client.connect();
-            let sql = ` SELECT * FROM public.events
-            INNER JOIN public.event_categories ON public.events.id_event_category=event_categories.id`
-            if (aksjhdkas){
-                sql = sql + "AND lower(event_categories.name) like lower('%$1%') AND firs_askjd = $2$ `;  "
-            }
-            if (aksjhdkas){
-                sql = sql + "AND lower(event_categories.name) like lower('%$1%') AND firs_askjd = $2$ `;  "
-            }
-
-            if (aksjhdkas){
-                sql = sql + "AND lower(event_categories.name) like lower('%$1%') AND firs_askjd = $2$ `;  "
-            }
-
-            if (aksjhdkas){
-                sql = sql + "WHERE lower(event_categories.name) like lower('%$1%') AND firs_askjd = $2$ `;  "
-            }
-            
-            
-
-            const values = [category]; 
-            let result = await client.query(sql, values); 
-            if(result.rows.length > 0){
-                returnObject = result.rows[0];
-            }
-            await client.end();
-            return returnObject;
-            
-        } catch (error){
-            console.log(error);
-        }
-        return returnObject;
-    }
-
-    getByStartDate = async (startDate) =>{
-        let returnObject = null;
-        const client = new Client(config_event);
-        try {
-            await client.connect();
-            let sql = ` SELECT * FROM events WHERE start_date=$1`;  
-            const values = [startDate]; 
-            let result = await client.query(sql, values); 
-            if(result.rows.length > 0){
-                returnObject = result.rows[0];
-            }
-            await client.end();
-            return returnObject;
-            
-        } catch (error){
-            console.log(error);
-        }
-        return returnObject;
-    }
+    };
     
-    getByTag = async (tag) =>{
-        let returnObject = null;
-        const client = new Client(config_event);
-        try {
-            await client.connect();
-            let sql =   `SELECT * FROM public.events
-                        INNER JOIN public.event_tags ON public.events.id=event_tags.id_event
-                        INNER JOIN public.tags ON public.events_tags.id_tag=tags.id
-                        WHERE tags.name=$1`;  
-            const values = [tag]; 
-            let result = await client.query(sql, values); 
-            if(result.rows.length > 0){
-                returnObject = result.rows[0];
-            }
-            await client.end();
-            return returnObject;
-            
-        } catch (error){
-            console.log(error);
-        }
-        return returnObject;
-    }
 
     insertEvent = async (entity) =>{ //necesita autenticacion
         let returnArray = null;

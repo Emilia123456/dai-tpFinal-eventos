@@ -1,84 +1,29 @@
 import { Router } from "express";
 import EventService from '../services/event-service.js'
+// importo el middleware
 const router = Router();
 const svc = new EventService();
 
 router.get('', async (req, res) => {
     let respuesta;
-    const returnArray =await svc.getAllAsync();
+    let name = req.query.name;
+    let category = req.query.category;
+    let tag = req.query.tag;
+    let startDate = req.query.startDate
+
+    const returnArray = await svc.searchEvent(name, category, tag, startDate);
     if(returnArray!=null){
         respuesta = res.status(200).json(returnArray);
     }else{
         respuesta=res.status(500).send(`Error interno`);
     }
-    //console.log(respuesta) ANDA
     return respuesta;
 });
 
-router.get('/:id', async (req, res) => {
-    let respuesta;
-    let id = req.params.id;
-    const returnEntity =await svc.getById(id);
-    if(returnEntity!=null){
-        respuesta = res.status(200).json(returnEntity);
-    }else{
-        respuesta=res.status(404).send(`Not Found`);
-    }
-    return respuesta;
-});
-
-router.get('/:name', async (req, res) => {
-    let respuesta;
-    let name = req.params.name;
-    const returnEntity =await svc.getByName(name);
-    if(returnEntity!=null){
-        respuesta = res.status(200).json(returnEntity);
-    }else{
-        respuesta=res.status(404).send(`Not Found`);
-    }
-    return respuesta;
-});
-// api/events?category=reci&first_name=emi
-// api/events?last_name=pipa&attendeded=1%djfhas
-router.get('/:category', async (req, res) => {
-    let respuesta;
-    let category = req.query.category;
-    const returnEntity =await svc.getByCategory(category);
-    if(returnEntity!=null){
-        respuesta = res.status(200).json(returnEntity);
-    }else{
-        respuesta=res.status(404).send(`Not Found`);
-    }
-    return respuesta;
-});
-
-router.get('/:startDate', async (req, res) => {
-    let respuesta;
-    let startDate = req.params.startDate;
-    const returnEntity =await svc.getByStartDate(startDate);
-    if(returnEntity!=null){
-        respuesta = res.status(200).json(returnEntity);
-    }else{
-        respuesta=res.status(404).send(`Not Found`);
-    }
-    return respuesta;
-});
-
-router.get('/:tag', async (req, res) => {
-    let respuesta;
-    let tag = req.params.tag;
-    const returnEntity =await svc.getByTag(tag);
-    if(returnEntity!=null){
-        respuesta = res.status(200).json(returnEntity);
-    }else{
-        respuesta=res.status(404).send(`Not Found`);
-    }
-    return respuesta;
-});
-
-router.post('', async (req, res) => {
+router.post('', /*authMiddleware*/ async (req, res) => {
     let response;
     const dataEvent = req.body
+    //dataEvent.id_user_creator = aslkdjaslk
     const returnEntity = await svc.insertEvent(dataEvent)
     try{
         returnEntity!=null
