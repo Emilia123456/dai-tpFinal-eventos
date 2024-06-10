@@ -188,7 +188,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    { \r\n        \"name\": \"wedding\",\r\n        \"display_order\": null\r\n    }",
+							"raw": "    { \r\n        \"name\": \"cena\",\r\n        \"display_order\": null\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -313,7 +313,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    { \r\n        \"first_name\" :\"chau\",\r\n        \"last_name\" :\"hola\",\r\n        \"username\": \"wedding\",\r\n        \"password\": \"mira vos\"\r\n    }",
+							"raw": "    { \r\n        \"first_name\" :\"ysssss\",\r\n        \"last_name\" :\"holaaa\",\r\n        \"username\": \"emiarm\",\r\n        \"password\": \"\"\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -338,12 +338,25 @@
 				},
 				{
 					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"pm.environment.set('token', res.token)\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    { \r\n        \"username\": \"polshu@polshu.com.ar\",\r\n        \"password\": \"pablito\"\r\n    }",
+							"raw": "    { \r\n        \"username\": \"emiliainés@gmail.com\",\r\n        \"password\": \"emiarm111\"\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -351,12 +364,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/user/login",
+							"raw": "http://10.144.1.40:3000/api/user/login",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"10",
+								"144",
+								"1",
+								"40"
 							],
-							"port": "3001",
+							"port": "3000",
 							"path": [
 								"api",
 								"user",
@@ -411,6 +427,226 @@
 								"api",
 								"user",
 								"13"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "searchEvent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "kjagfkajsd",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/event?name=tay&category=recital&tag=rock&startDate=2023-11-09 00:00:00",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"event"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "tay"
+								},
+								{
+									"key": "category",
+									"value": "recital"
+								},
+								{
+									"key": "tag",
+									"value": "rock"
+								},
+								{
+									"key": "startDate",
+									"value": "2023-11-09 00:00:00"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "insertEvent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    { \r\n        \"name\": \"cenaaaaa\",\r\n        \"description\": \"Cenamos papasfritas en la casa de pipafrita\",\r\n        \"id_event_category\": 1,\r\n        \"id_event_location\": 1,\r\n        \"start_date\": null,\r\n        \"duration_in_minutes\": 46,\r\n        \"price\": 24354,\r\n        \"enabled_for_enrollment\": 1,\r\n        \"max_assistance\": 90\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/event",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"event"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateEvent",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    { \r\n        \"id\" : 1,\r\n        \"name\": \"cena\",\r\n        \"description\": \"Cenamos papasfritas en la casa de pipafrita\",\r\n        \"id_event_category\": 1,\r\n        \"id_event_location\": 1,\r\n        \"start_date\": null,\r\n        \"duration_in_minutes\": 47,\r\n        \"price\": 24354,\r\n        \"enabled_for_enrollment\": true,\r\n        \"max_assistance\": 90,\r\n        \"id_creator_user\": 1\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/event",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"event"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteEvent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/event/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"event",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchEventById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/event/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"event",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Event-enrrolments",
+			"item": [
+				{
+					"name": "listParticipants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/enrolment?first_name=pablo&last_name=ulm&username=p&attended=1&rating=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"enrolment"
+							],
+							"query": [
+								{
+									"key": "first_name",
+									"value": "pablo"
+								},
+								{
+									"key": "last_name",
+									"value": "ulm"
+								},
+								{
+									"key": "username",
+									"value": "p"
+								},
+								{
+									"key": "attended",
+									"value": "1"
+								},
+								{
+									"key": "rating",
+									"value": "5"
+								}
 							]
 						}
 					},
