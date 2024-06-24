@@ -38,15 +38,19 @@ router.post('/:id/enrollment', authMiddleware, async (req, res) => {
 
         //const event = await svc.create(eventId, userId);
         if (event == null) {
+            console.log("el evento es nulo")
             return res.status(404).json({ error: 'Evento no encontrado' });
         }
         const currentDate = new Date().toISOString();
         const eventDate = new Date(event.start_date);
-        if (eventDate <= currentDate) {
+        if (eventDate <= currentDate) { 
+            console.log("el evento ya pasó")
             return res.status(400).json({ error: 'No se puede registrar a un evento que ya sucedió o es hoy' });
+           
         }
 
         if (!event.enabled_for_enrollment) {
+            console.log("el evento no se puede")
             return res.status(400).json({ error: 'El evento no está habilitado para la inscripción' });
         }
 

@@ -38,6 +38,39 @@ export default class EnrollmentRepository {
         return returnArray;
     }
     
+
+    async getRegistrationsCount(eventId) {
+   
+        const client = new Client(config_enrollment);
+        try {
+            await client.connect();
+            const sql = 'SELECT COUNT(*) FROM event_enrollments WHERE id_event = $1';
+            const values = [eventId];
+            const result = await client.query(sql, values);
+            await client.end();
+            return parseInt(result.rows[0].count, 10);
+        } catch (error) {
+            console.error('Error en getRegistrationsCount:', error);
+            throw error;
+        }
+    }
+
+
+    async isUserRegistered(eventId, userId) {
+        // Implementación para verificar si el usuario ya está registrado
+        const client = new Client(config_enrollment);
+        try {
+            await client.connect();
+            const sql = 'SELECT * FROM event_enrollments WHERE id_event = $1 AND id_user = $2';
+            const values = [eventId, userId];
+            const result = await client.query(sql, values);
+            await client.end();
+            return result.rows.length > 0;
+        } catch (error) {
+            console.error('Error en isUserRegistered:', error);
+            throw error;
+        }
+    }
   
     async create(eventId, userId) {
         let returnArray = null;
@@ -56,6 +89,7 @@ export default class EnrollmentRepository {
             await client.end();
         } catch (error) {
             console.error(error); 
+            throw error;
         }
         return returnArray;
     }

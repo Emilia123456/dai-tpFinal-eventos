@@ -9,12 +9,13 @@ const authMiddleware = async (req, res, next) => {
         console.log('token ES NULO!')
         return res.status(401).json({ error: 'Unauthorized' });
     } else {
-        try {
+        try { 
             token = token.replace("Bearer ", "");
-            console.log('token:', token)
             payLoadOriginal = await jwt.verify(token, secretKey); 
             req.user = payLoadOriginal;
             next();
+           
+            console.log('token:', token)
         } catch(e) {
             console.log('token desencriptado erroneao!')
             return res.status(401).json({ error: 'Unauthorized' });
