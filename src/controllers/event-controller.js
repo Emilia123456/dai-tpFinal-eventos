@@ -6,6 +6,17 @@ const svc = new EventService();
 
 router.get('', async (req, res) => {
     let respuesta;
+    const returnEntity = await svc.listEvents();
+    if(returnEntity!=null){
+        respuesta = res.status(200).json(returnEntity);
+    }else{
+        respuesta=res.status(404).send(`Not Found`);
+    }
+    return respuesta;
+});
+
+router.get('', async (req, res) => {
+    let respuesta;
     let name = req.query.name;
     let category = req.query.category;
     let tag = req.query.tag;
@@ -31,7 +42,6 @@ router.get('/:id', async (req, res) => {
     }
     return respuesta;
 });
-
 
 router.post('', authMiddleware, async (req, res) => {
     let response;

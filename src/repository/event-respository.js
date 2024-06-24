@@ -6,6 +6,22 @@ await client.connect();
 
 export default class EventRepository {
     
+    listEvents = async () =>{
+        let returnArray =null;
+        const client = new Client(config_event);
+        try {
+            await client.connect();
+            let sql = `SELECT * from events`; 
+            let result = await client.query(sql);
+            await client.end();
+            returnArray = result.rows;
+        } catch (error){
+            console.log(error);
+        }
+        console.log(returnArray)
+        return returnArray;
+    }
+
     searchEvent = async (name, category, tag, startDate) => {
         let returnArray = null;
         const client = new Client(config_event);

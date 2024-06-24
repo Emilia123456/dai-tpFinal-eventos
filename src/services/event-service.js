@@ -2,6 +2,13 @@ import EventRepository from "../repository/event-respository.js";
 
 export default class EventService{
 
+    listEvents = async () => {
+        const repo = new EventRepository();
+        const returnArray = await repo.listEvents();
+        console.log(returnArray) 
+        return returnArray;
+    }
+
     searchEvent = async (name, category, tag, startDate) => {
         const repo = new EventRepository();
         const returnArray = await repo.searchEvent(name, category, tag, startDate);
