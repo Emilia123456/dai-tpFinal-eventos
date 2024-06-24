@@ -1,8 +1,8 @@
 import EnrollmentRepository from "../repository/enrollment-repository.js";
 
-export default class EnrolmentService{
+export default class EnrollmentService{
 
-    eventEnrollment = async (id) => {
+    eventEnrollment = async (entity) => {
         const repo = new EnrollmentRepository();
         await repo.eventEnrollment(entity);
     }

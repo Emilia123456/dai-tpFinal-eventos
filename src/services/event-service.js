@@ -9,9 +9,9 @@ export default class EventService{
         return returnArray;
     }
 
-    searchEvent = async (name, category, tag, startDate) => {
+    searchEvent = async (name, category, tag, startdate) => {
         const repo = new EventRepository();
-        const returnArray = await repo.searchEvent(name, category, tag, startDate);
+        const returnArray = await repo.searchEvent(name, category, tag, startdate);
         console.log(returnArray) 
         return returnArray;
     }

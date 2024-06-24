@@ -54,12 +54,20 @@ router.post('/:id/enrollment', authMiddleware, async (req, res) => {
             return res.status(400).json({ error: 'El usuario ya está registrado en el evento' });
         }
 
-        const dataUser = req.body;
-        dataUser.id_user_creator = userId;
-        const returnEntity = await svc.eventEnrollment(dataUser);
+        const dataUser = {
+            id_event: eventId,
+            id_user: userId,
+            description: req.body.description, 
+            registration_date_time: new Date(),
+            attended: false,
+            observations: req.body.observations,
+            rating: req.body.rating
+        };
 
+        const returnEntity = await svc.eventEnrollment(dataUser);
         response = res.status(201).json(returnEntity);
     } catch (error) {
+        console.error(error); // Agrega este log para depurar el error interno
         response = res.status(500).json({ error: 'Error interno' });
     }
 

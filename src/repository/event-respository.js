@@ -22,7 +22,7 @@ export default class EventRepository {
         return returnArray;
     }
 
-    searchEvent = async (name, category, tag, startDate) => {
+    searchEvent = async (name, category, tag, startdate) => {
         let returnArray = null;
         const client = new Client(config_event);
         try {
@@ -43,8 +43,8 @@ export default class EventRepository {
             if (tag!=null){
                 sql += `lower(t.name) LIKE lower('%${tag}%') AND `;
             }
-            if (startDate!=null){
-                 sql += `e.start_date = '${startDate}' AND `;
+            if (startdate!=null){
+                 sql += `e.start_date = '${startdate}' AND `;
              }
     
             // Sacamos el and del final

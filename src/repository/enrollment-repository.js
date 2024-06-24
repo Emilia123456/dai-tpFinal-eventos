@@ -38,13 +38,13 @@ export default class EnrollmentRepository {
         return returnArray;
     }
     
-
-    eventEnrollment = async (entity) =>{
-        let returnArray =null;
+  
+    async eventEnrollment(entity) {
+        let returnArray = null;
         const client = new Client(config_enrollment);
         try {
             await client.connect();
-            let sql = `UPDATE event_enrollments SET id_event=$2, id_user=$3, description=$4, registration_date_time=$5, attended=$6, observations=$7, rating=$8 WHERE id=$1`; 
+            const sql = `UPDATE event_enrollments SET id_event=$1, id_user=$2, description=$3, registration_date_time=$4, attended=$5, observations=$6, rating=$7 WHERE id=$8`; 
             const values = [
                 entity.id_event,
                 entity.id_user,
@@ -53,17 +53,18 @@ export default class EnrollmentRepository {
                 entity.attended, 
                 entity.observations, 
                 entity.rating,
-                entity.id
+                entity.id 
             ];  
             const result = await client.query(sql, values);
-            return result.rowCount; 
-            await client.end();
             returnArray = result.rows;
-        } catch (error){
-            console.log(error);
+            await client.end();
+        } catch (error) {
+            console.error(error); 
         }
         return returnArray;
     }
+
+
 
     listParticipants = async (first_name, last_name, username, attended, rating) => {
         let returnArray = null;

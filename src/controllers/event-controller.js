@@ -20,9 +20,9 @@ router.get('', async (req, res) => {
     let name = req.query.name;
     let category = req.query.category;
     let tag = req.query.tag;
-    let startDate = req.query.startDate
+    let startdate = req.query.startdate
 
-    const returnArray = await svc.searchEvent(name, category, tag, startDate);
+    const returnArray = await svc.searchEvent(name, category, tag, startdate);
     if(returnArray!=null){
         respuesta = res.status(200).json(returnArray);
     }else{
