@@ -2,6 +2,10 @@ import EnrollmentRepository from "../repository/enrollment-repository.js";
 
 export default class EnrollmentService{
 
+        constructor() {
+            this.repo = new EnrollmentRepository;
+        }
+
         async eventEnrollment(entity) {
             const eventId = entity.id_event;
             const userId = entity.id_user;

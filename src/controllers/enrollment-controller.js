@@ -49,7 +49,7 @@ router.post('/:id/enrollment', authMiddleware, async (req, res) => {
            
         }
 
-        if (!event.enabled_for_enrollment) {
+        if (event.enabled_for_enrollment === 0) {
             console.log("el evento no se puede")
             return res.status(400).json({ error: 'El evento no está habilitado para la inscripción' });
         }

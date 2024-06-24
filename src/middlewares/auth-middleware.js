@@ -1,25 +1,32 @@
 import jwt from 'jsonwebtoken';
 
-const authMiddleware = async (req, res, next) => {
-    let token = req.headers.authorization;
-    let payLoadOriginal = null;
-    const secretKey = 'clave$'
-    console.log('token Original:', token)
-    if (token == null) {
-        console.log('token ES NULO!')
-        return res.status(401).json({ error: 'Unauthorized' });
+async function undoToken(token) {
+    const secretKey = process.env.SECRETKEYJWT;
+    try {
+        return await jwt.verify(token, secretKey);
+    } catch (error) {
+        return 'Error en la conversión';
+    }
+}
+
+function removeBearerFromToken(token) {
+    return token.replace("Bearer ", "");
+}
+
+function authMiddleware(req, res, next) {
+    let authHeader = req.headers.authorization;
+    if (!authHeader) {
+        res.status(401).send([{ success: false, message: 'Es necesario un token' }]);
     } else {
-        try { 
-            token = token.replace("Bearer ", "");
-            payLoadOriginal = await jwt.verify(token, secretKey); 
-            req.user = payLoadOriginal;
-            next();
-           
-            console.log('token:', token)
-        } catch(e) {
-            console.log('token desencriptado erroneao!')
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
+        authHeader = removeBearerFromToken(authHeader);
+        undoToken(authHeader)
+            .then((decodedToken) => {
+                req.user = decodedToken;
+                next();
+            })
+            .catch((error) => {
+                res.status(401).send([{ success: false, message: 'Token inválido' }]);
+            });
     }
 }
 
