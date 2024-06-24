@@ -2,9 +2,12 @@ import EnrollmentRepository from "../repository/enrollment-repository.js";
 
 export default class EnrollmentService{
 
-    eventEnrollment = async (entity) => {
+    create = async (eventId, userId) => {
+        let respuesta;
         const repo = new EnrollmentRepository();
-        await repo.eventEnrollment(entity);
+        
+        await repo.create(eventId, userId);
+        return respuesta;
     }
     
     listParticipants = async (first_name, last_name, username, attended, rating) => {

@@ -39,21 +39,17 @@ export default class EnrollmentRepository {
     }
     
   
-    async eventEnrollment(entity) {
+    async create(eventId, userId) {
         let returnArray = null;
         const client = new Client(config_enrollment);
         try {
             await client.connect();
-            const sql = `UPDATE event_enrollments SET id_event=$1, id_user=$2, description=$3, registration_date_time=$4, attended=$5, observations=$6, rating=$7 WHERE id=$8`; 
+            const sql = `INSERT INTO public.event_enrollments (id_event, id_user, registration_date_time, attended) VALUES ($1, $2, $3, $4)`; 
             const values = [
-                entity.id_event,
-                entity.id_user,
-                entity.description, 
-                entity.registration_date_time, 
-                entity.attended, 
-                entity.observations, 
-                entity.rating,
-                entity.id 
+                eventId,
+                userId,
+                Date(),
+                '0'
             ];  
             const result = await client.query(sql, values);
             returnArray = result.rows;

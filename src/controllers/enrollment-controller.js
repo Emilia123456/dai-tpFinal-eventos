@@ -1,10 +1,12 @@
 import { Router } from "express";
 import EnrollmentService from '../services/enrollment-service.js'
+import EventService from '../services/event-service.js'
 import authMiddleware from '../middlewares/auth-middleware.js'
 const router = Router();
 const svc = new EnrollmentService();
+const eventService = new EventService();
 
-router.get(':id/enrollment', async (req, res) => { //hola no funciona, se nos rompio todo no le gusto el id 
+router.get('/:id/enrollment', async (req, res) => { //hola no funciona, se nos rompio todo no le gusto el id 
     let respuesta;
     let first_name = req.query.first_name;
     let last_name = req.query.last_name;
@@ -27,14 +29,18 @@ router.post('/:id/enrollment', authMiddleware, async (req, res) => {
     const eventId = req.params.id;
     const userId = req.user.id;
     let response;
+    console.log('eventId:', eventId)
+    console.log('userId:', userId)
 
+    let event = eventService.searchEventById(eventId);
     try {
-        const event = await svc.eventEnrollment(eventId);
-        if (!event) {
+
+
+        //const event = await svc.create(eventId, userId);
+        if (event == null) {
             return res.status(404).json({ error: 'Evento no encontrado' });
         }
-
-        const currentDate = new Date();
+        const currentDate = new Date().toISOString();
         const eventDate = new Date(event.start_date);
         if (eventDate <= currentDate) {
             return res.status(400).json({ error: 'No se puede registrar a un evento que ya sucedió o es hoy' });
@@ -54,17 +60,8 @@ router.post('/:id/enrollment', authMiddleware, async (req, res) => {
             return res.status(400).json({ error: 'El usuario ya está registrado en el evento' });
         }
 
-        const dataUser = {
-            id_event: eventId,
-            id_user: userId,
-            description: req.body.description, 
-            registration_date_time: new Date(),
-            attended: false,
-            observations: req.body.observations,
-            rating: req.body.rating
-        };
 
-        const returnEntity = await svc.eventEnrollment(dataUser);
+        const returnEntity = await svc.create(eventId, userId);
         response = res.status(201).json(returnEntity);
     } catch (error) {
         console.error(error); // Agrega este log para depurar el error interno
