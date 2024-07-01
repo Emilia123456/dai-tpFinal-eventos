@@ -104,27 +104,22 @@ export default class EnrollmentRepository {
             let sql =  `SELECT u.* FROM users u
                         INNER JOIN event_enrollments ee ON u.id = ee.id_user
                         inner JOIN events e ON e.id = ee.id_event
-                        WHERE `; 
+                        WHERE 1=1 `; 
     
             if (first_name!=null){
-                sql += `lower(u.first_name) LIKE lower('%${first_name}%') AND `; 
+                sql += `AND lower(u.first_name) LIKE lower('%${first_name}%') `; 
             }
             if (last_name!=null){
-                sql += `lower(u.last_name) LIKE lower('%${last_name}%') AND `; 
+                sql += `AND lower(u.last_name) LIKE lower('%${last_name}%')  `; 
             }
             if (username!=null){
-                sql += `lower(u.username) LIKE lower('%${username}%') AND `;
+                sql += `AND lower(u.username) LIKE lower('%${username}%') `;
             }
             if (attended!=null){
-                 sql += `ee.attended = '${attended}' AND `;
+                 sql += `AND ee.attended = '${attended}' `;
             }
             if (rating!=null){
-                sql += `ee.rating = '${rating}' AND `;
-            }
-    
-            // Sacamos el and del final
-            if (sql.endsWith('AND ')) {
-                sql = sql.slice(0, -4); 
+                sql += `AND  ee.rating = '${rating}' `;
             }
     
             let result = await client.query(sql);

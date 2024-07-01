@@ -6,6 +6,13 @@ export default class EnrollmentService{
             this.repo = new EnrollmentRepository;
         }
 
+        listParticipants = async (entity) => {
+            const repo = new EnrollmentRepository();
+            const returnArray = await repo.listParticipants(entity);
+            console.log(returnArray) 
+            return returnArray;
+        }
+
         async eventEnrollment(entity) {
             const eventId = entity.id_event;
             const userId = entity.id_user;
