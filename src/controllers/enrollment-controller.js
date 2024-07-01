@@ -76,5 +76,42 @@ router.post('/:id/enrollment', authMiddleware, async (req, res) => {
 });
 
 
+router.delete('/:id/enrollment', authMiddleware, async (req, res) => {
+    const enrollmentToEliminate = req.params.id;
+    const userId = req.user.id;
+    
+    try {
+        const evento = await eventService.searchEventById(enrollmentToEliminate); 
+        
+        if (!evento) {
+            return res.status(404).send('No existe el evento');
+        }
+
+        const userReg = await svc.isUserRegistered(evento.id, userId);
+        
+        if (!userReg) {
+            return res.status(401).send('No estás registrado en el evento');
+        }
+
+        const now = new Date().toISOString();
+        
+        if (evento.start_date <= now) {
+            return res.status(400).send('El evento ya pasó o es hoy');
+        }
+        
+        if (evento.enabled_for_enrollment <= 0) {
+            return res.status(400).send('El evento no se encuentra habilitado para la inscripción');
+        }
+
+        const rowsAffected = await svc.deleteEnrollment(enrollmentToEliminate);
+        return res.status(200).json(rowsAffected);
+        
+    } catch (error) {
+        return res.status(500).send('Error interno del servidor');
+    }
+});
+
+
 
 export default router;
+

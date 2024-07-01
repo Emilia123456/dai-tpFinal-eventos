@@ -77,7 +77,7 @@ router.put('', authMiddleware, async (req, res) => {
 router.delete('/:id', authMiddleware, async (req, res) => {
     let response;
     const eventToEliminate = req.params.id;
-    const returnEntity = await svc.getById(eventToEliminate); 
+    const returnEntity = await svc.searchEvent(eventToEliminate); 
     if (returnEntity.id_creator_user = req.user.id){
 
         if (returnEntity != null){

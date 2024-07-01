@@ -103,10 +103,20 @@ export default class EnrollmentRepository {
         const client = new Client(config_enrollment);
         try {
             await client.connect();
-            let sql =  `SELECT u.* FROM users u
-                        INNER JOIN event_enrollments ee ON u.id = ee.id_user
-                        inner JOIN events e ON e.id = ee.id_event
-                        WHERE 1=1 `; 
+            let sql =  `SELECT
+                            json_build_object(
+                                'id', u.id,
+                                'username', u.username,
+                                'first_name', u.first_name,
+                                'last_name', u.last_name
+                            ) AS user,
+                            ee.attended,
+                            ee.rating,
+                            ee.description
+                        FROM
+                            event_enrollments ee
+                        INNER JOIN users u ON ee.id_user = u.id
+                        WHERE ee.id_event = 6 `; 
     
             if (first_name!=null){
                 sql += `AND lower(u.first_name) LIKE lower('%${first_name}%') `; 
@@ -159,5 +169,23 @@ export default class EnrollmentRepository {
         return returnObject;
     };
     
+    
+    deleteEnrollment = async (enrollmentToEliminate) =>{//necesita autenticacion
+        let returnValue = 0;
+        const client = new Client(config_enrollment);
+        
+        try {
+            await client.connect();
+            let sql = 'DELETE from * FROM event_enrollments WHERE id=$1'; 
+            const values = [enrollmentToEliminate];
+
+            const output = await client.query(sql, values); 
+            return output.rowCount;
+            
+        } catch (error){
+            console.log('error', error);
+        }
+        return returnValue;
+    }
 
 }
