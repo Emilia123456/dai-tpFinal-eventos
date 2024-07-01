@@ -12,7 +12,7 @@ export default class EnrollmentService{
             console.log(returnArray) 
             return returnArray;
         }
-
+/* 
         async eventEnrollment(entity) {
             const eventId = entity.id_event;
             const userId = entity.id_user;
@@ -43,20 +43,33 @@ export default class EnrollmentService{
   
             return await this.repo.eventEnrollment(entity);
         }
-    
+     */
         async getEventById(eventId) {
-            // Implementación para obtener el evento por ID
-            return await this.repo.getEventById(eventId);
+            const repo = new EnrollmentRepository();
+            const returnArray = await repo.getEventById(eventId);
+            console.log(returnArray) 
+            return returnArray;
         }
     
         async getRegistrationsCount(eventId) {
-            // Implementación para obtener el conteo de inscripciones
-            return await this.repo.getRegistrationsCount(eventId);
+            const repo = new EnrollmentRepository();
+            const returnArray = await repo.getRegistrationsCount(eventId);
+            console.log(returnArray) 
+            return returnArray;
         }
     
         async isUserRegistered(eventId, userId) {
-            // Implementación para verificar si el usuario ya está registrado
-            return await this.repo.isUserRegistered(eventId, userId);
+            const repo = new EnrollmentRepository();
+            const returnArray = await repo.isUserRegistered(eventId, userId);
+            console.log(returnArray) 
+            return returnArray;
+        }
+
+        async  createRegistration(eventId, userId) {
+            const repo = new EnrollmentRepository();
+            const returnArray = await repo.createRegistration(eventId, userId);
+            console.log(returnArray) 
+            return returnArray;
         }
     }
     

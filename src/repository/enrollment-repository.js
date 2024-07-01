@@ -1,9 +1,11 @@
 import config_enrollment from '../configs/db-config-enrollment.js';
+import EventRepository from "../repository/event-respository.js";
 import pkg from 'pg' 
 const { Client }  = pkg;
 const client = new Client(config_enrollment);
 await client.connect();
 
+const evtRepo = new EventRepository();
 export default class EnrollmentRepository {
     
     insertEvent = async (entity) =>{ //necesita autenticacion
@@ -72,7 +74,7 @@ export default class EnrollmentRepository {
         }
     }
   
-    async create(eventId, userId) {
+    async createRegistration(eventId, userId) {
         let returnArray = null;
         const client = new Client(config_enrollment);
         try {
@@ -81,7 +83,7 @@ export default class EnrollmentRepository {
             const values = [
                 eventId,
                 userId,
-                Date(),
+                new Date().toISOString(),
                 '0'
             ];  
             const result = await client.query(sql, values);
@@ -133,4 +135,29 @@ export default class EnrollmentRepository {
         console.log(returnArray)
         return returnArray;
     };
+
+    getEventById = async (eventId) => {
+        let returnObject = null;
+        const client = new Client(config_enrollment);
+        try {
+            if (!eventId) {
+                console.error('El eventId proporcionado es nulo o indefinido');
+                return returnObject;
+            }
+    
+            const eventActual = await evtRepo.searchEventById(eventId);
+
+            if (eventActual != null) {
+                returnObject = eventActual.rows[0];
+                console.log('Resultado encontrado:', returnObject);
+            } else {
+                console.log('No se encontró ningún evento con el id proporcionado');
+            }
+        } catch (error) {
+            console.error('Error durante la consulta:', error);
+        }
+        return returnObject;
+    };
+    
+
 }

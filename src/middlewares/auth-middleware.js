@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 
 async function undoToken(token) {
-    const secretKey = process.env.SECRETKEYJWT;
+    
+    const secretKey = 'clave$'
     try {
         return await jwt.verify(token, secretKey);
     } catch (error) {
@@ -22,6 +23,7 @@ function authMiddleware(req, res, next) {
         undoToken(authHeader)
             .then((decodedToken) => {
                 req.user = decodedToken;
+                console.log('decodedToken', decodedToken);
                 next();
             })
             .catch((error) => {

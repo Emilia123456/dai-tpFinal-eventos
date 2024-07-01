@@ -32,7 +32,7 @@ router.post('/:id/enrollment', authMiddleware, async (req, res) => {
     console.log('eventId:', eventId)
     console.log('userId:', userId)
 
-    let event = eventService.searchEventById(eventId);
+    let event = await eventService.searchEventById(eventId);
     try {
 
 
@@ -65,7 +65,7 @@ router.post('/:id/enrollment', authMiddleware, async (req, res) => {
         }
 
 
-        const returnEntity = await svc.create(eventId, userId);
+        const returnEntity = await svc.createRegistration(eventId, userId);
         response = res.status(201).json(returnEntity);
     } catch (error) {
         console.error(error); // Agrega este log para depurar el error interno
