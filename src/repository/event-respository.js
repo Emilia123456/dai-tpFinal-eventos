@@ -6,7 +6,7 @@ await client.connect();
 
 export default class EventRepository {
     
-    listEvents = async () =>{
+    /* listEvents = async () =>{
         let returnArray =null;
         const client = new Client(config_event);
         try {
@@ -18,40 +18,98 @@ export default class EventRepository {
         } catch (error){
             console.log(error);
         }
-        console.log(returnArray)
+        //console.log(returnArray)
         return returnArray;
-    }
+    } */
 
     searchEvent = async (name, category, tag, startdate) => {
         let returnArray = null;
         const client = new Client(config_event);
         try {
             await client.connect();
-            let sql =  `SELECT e.*
-                        FROM events e
-                        INNER JOIN event_categories ec ON e.id_event_category = ec.id
-                        LEFT JOIN event_tags et ON e.id = et.id_event
-                        LEFT JOIN tags t ON et.id_tag = t.id 
-                        WHERE `; 
+            let sql =  `SELECT 
+            e.id, 
+            e.name, 
+            e.description, 
+            e.id_event_category,
+            json_build_object( 
+                'id',            ec.id, 
+                'name',          ec.name, 
+                'display_order', ec.display_order
+            ) AS ec,
+            e.id_event_location,
+            json_build_object(
+                'id',            el.id, 
+                'id_location',   el.id_location, 
+                'location',      json_build_object(
+                    'id',            l.id,
+                    'name',          l.name,
+                    'id_province',   l.id_province,
+                    'province',      json_build_object(
+                        'id',            pr.id,
+                        'name',          pr.name,
+                        'full_name',     pr.full_name,
+                        'latitude',      pr.latitude, 
+                        'longitude',     pr.longitude,
+                        'display_order', pr.display_order
+                    ),
+                    'latitude',      l.latitude,
+                    'longitude',     l.longitude
+                ),
+                'name',           el.name,
+                'full_address',   el.full_address,
+                'max_capacity',   el.max_capacity,
+                'latitude',       el.latitude, 
+                'longitude',      el.longitude,
+                'id_creator_user',el.id_creator_user
+            ) AS el,
+            e.start_date, 
+            e.duration_in_minutes, 
+            e.price, 
+            e.enabled_for_enrollment, 
+            e.max_assistance, 
+            e.id_creator_user,
+            json_build_object(
+                'id',            u.id,
+                'first_name',    u.first_name,
+                'last_name',     u.last_name,
+                'username',      u.username,
+                'password',      u.password
+            ) AS creator_user,
+            ARRAY(
+                SELECT 
+                    json_build_object(
+                        'id',   t.id,
+                        'name', t.name
+                    ) 
+                FROM tags t 
+                INNER JOIN event_tags et ON t.id = et.id_tag
+                WHERE et.id_event = e.id
+            ) AS t
+        FROM public.events e
+        LEFT JOIN public.event_categories ec ON e.id_event_category = ec.id
+        LEFT JOIN public.event_locations el ON e.id_event_location = el.id
+        LEFT JOIN public.locations l ON el.id_location = l.id
+        LEFT JOIN public.provinces pr ON l.id_province = pr.id
+        LEFT JOIN public.users u ON e.id_creator_user = u.id
+        WHERE 1=1
+        `; 
     
             if (name!=null){
-                sql += `lower(e.name) LIKE lower('%${name}%') AND `; 
+                sql += `AND lower(e.name) LIKE lower('%${name}%') `; 
             }
             if (category!=null){
-                sql += `lower(ec.name) LIKE lower('%${category}%') AND `; 
+                sql += `AND lower(ec.name) LIKE lower('%${category}%') `; 
             }
             if (tag!=null){
-                sql += `lower(t.name) LIKE lower('%${tag}%') AND `;
+                sql += `AND lower(t.name) LIKE lower('%${tag}%') `;
             }
             if (startdate!=null){
-                 sql += `e.start_date = '${startdate}' AND `;
+                 sql += `AND e.start_date = '${startdate}' `;
              }
     
             // Sacamos el and del final
-            if (sql.endsWith('AND ')) {
-                sql = sql.slice(0, -4); 
-            }
-    
+            
             let result = await client.query(sql);
             returnArray = result.rows;
     
@@ -60,7 +118,7 @@ export default class EventRepository {
         } finally {
             await client.end();
         }
-        console.log(returnArray)
+        //console.log(returnArray)
         return returnArray;
     };
 

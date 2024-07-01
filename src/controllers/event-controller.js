@@ -3,7 +3,7 @@ import EventService from '../services/event-service.js'
 import authMiddleware from '../middlewares/auth-middleware.js'
 const router = Router();
 const svc = new EventService();
-
+/*
 router.get('', async (req, res) => {
     let respuesta;
     const returnEntity = await svc.listEvents();
@@ -14,7 +14,7 @@ router.get('', async (req, res) => {
     }
     return respuesta;
 });
-
+*/
 router.get('', async (req, res) => {
     let respuesta;
     let name = req.query.name;
