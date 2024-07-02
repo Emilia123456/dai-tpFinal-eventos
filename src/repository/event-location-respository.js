@@ -5,22 +5,6 @@ const client = new Client(config_event_location);
 await client.connect();
 
 export default class EventLocationRepository {
-    
-    /* listEvents = async () =>{
-        let returnArray =null;
-        const client = new Client(config_event);
-        try {
-            await client.connect();
-            let sql = `SELECT * from events`; 
-            let result = await client.query(sql);
-            await client.end();
-            returnArray = result.rows;
-        } catch (error){
-            console.log(error);
-        }
-        //console.log(returnArray)
-        return returnArray;
-    } */
 
     getAll = async () => {
         let returnArray = null;
@@ -65,19 +49,18 @@ export default class EventLocationRepository {
         const client = new Client(config_event_location);
         try {
             await client.connect();
-            let sql = `INSERT INTO event_locations (name, full_address, max_capacity, latitude, longitude, id_creator_user)            
+            let sql = `INSERT INTO event_locations (id_location, name, full_address, max_capacity, latitude, longitude)            
             VALUES ($1, $2, $3, $4, $5, $6)`; // Array con los valores.
 
                 const values = [
+                    dataEvent.id_location,
                     dataEvent.name,
                     dataEvent.full_address,
                     dataEvent.max_capacity,
                     dataEvent.latitude,
                     dataEvent.longitude,
-                    dataEvent.id_creator_user
                 ];
         
-            
             const result = await client.query(sql, values); 
             await client.end();
             returnArray = result.rows;
@@ -92,16 +75,17 @@ export default class EventLocationRepository {
         const client = new Client(config_event_location);
         try {
             await client.connect();
-            let sql = `UPDATE event_locations SET (name, full_address, max_capacity, latitude, longitude, id_creator_user)            
-            VALUES ($1, $2, $3, $4, $5, $6)`; // Array con los valores.
+            let sql = `UPDATE event_locations SET (id_location, name, full_address, max_capacity, latitude, longitude)            
+            VALUES ($1, $2, $3, $4, $5, $6 )`; // Array con los valores.
 
                 const values = [
+                    dataEvent.id_location,
                     dataEvent.name,
                     dataEvent.full_address,
                     dataEvent.max_capacity,
                     dataEvent.latitude,
                     dataEvent.longitude,
-                    dataEvent.id_creator_user
+                    
                 ];
         
             

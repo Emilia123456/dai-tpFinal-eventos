@@ -32,61 +32,52 @@ router.get('/:id', authMiddleware, async (req, res) => {
 
 router.post('', authMiddleware, async (req, res) => {
     let response;
-    const dataEvent = req.body
-    dataEvent.id_user_creator = req.user.id
-    try{
-        if (dataEvent.name.length || dataEvent.full_address.length < 3) {
+    const dataEvent = req.body;
+    dataEvent.id_user_creator = req.user.id;
+    try {
+        if (dataEvent.name.length < 3 || dataEvent.full_address.length < 3) {
             return res.status(400).json({ error: "El campo 'nombre' o 'full_address' debe tener al menos 3 caracteres." });
-        } else if (!dataEvent.id_location){
-            return res.status(400).json({ error: "El campo 'Apellido' debe tener al menos 3 caracteres." });
-        }else if (!userData.password || userData.password.length < 3){
-            return res.status(400).json({ error: "El campo 'id_location' es nulo" }); 
-        }else if (dataEvent.max_capacity<0) {
+        } else if (!dataEvent.id_location) {
+            return res.status(400).json({ error: "El campo 'id_location' es nulo" });
+        } else if (dataEvent.max_capacity < 0) {
             return res.status(400).json({ error: "La capacidad maxima ingresada no es valida" });
-         }
-        const returnEntity = await svc.insertEvent(dataEvent)
-        if(returnEntity!=null){
-            response = res.status(201).json(returnEntity);
-            
-        } else {
-            response  = res.status(500).json({ error: "Algo raro paso aca!!" }); 
         }
-    }catch{
-        response=res.status(400).send(`Error interno`);
-        return response;
-    } 
-
+        const returnEntity = await svc.insertEventLocation(dataEvent);
+        if (returnEntity != null) {
+            response = res.status(201).json(returnEntity);
+        } else {
+            response = res.status(500).json({ error: "Algo raro paso aca!!" });
+        }
+    } catch (error) {
+        response = res.status(400).send(`Error interno`);
+    }
     return response;
 });
 
 router.put('', authMiddleware, async (req, res) => {
     let response;
-    const dataEvent = req.body
-    dataEvent.id_user_creator = req.user.id
-    try{
-        if (dataEvent.name.length || dataEvent.full_address.length <= 3) {
+    const dataEvent = req.body;
+    dataEvent.id_user_creator = req.user.id;
+    try {
+        if (dataEvent.name.length < 3 || dataEvent.full_address.length < 3) {
             return res.status(400).json({ error: "El campo 'nombre' o 'full_address' debe tener al menos 3 caracteres." });
-        } else if (!dataEvent.id_location){
-            return res.status(400).json({ error: "El campo 'Apellido' debe tener al menos 3 caracteres." });
-        }else if (!userData.password || userData.password.length <= 3){
-            return res.status(400).json({ error: "El campo 'id_location' es nulo" }); 
-        }else if (dataEvent.max_capacity<0) {
+        } else if (!dataEvent.id_location) {
+            return res.status(400).json({ error: "El campo 'id_location' es nulo" });
+        } else if (dataEvent.max_capacity < 0) {
             return res.status(400).json({ error: "La capacidad maxima ingresada no es valida" });
-         }
-        const returnEntity = await svc.updateEventLocation(dataEvent);
-        if(returnEntity!=null){
-            response = res.status(201).json(returnEntity);
-            
-        } else {
-            response  = res.status(500).json({ error: "Algo raro paso aca!!" }); 
         }
-    }catch{
-        response=res.status(400).send(`Error interno`);
-        return response;
-    } 
-
+        const returnEntity = await svc.updateEventLocation(dataEvent);
+        if (returnEntity != null) {
+            response = res.status(200).json(returnEntity);
+        } else {
+            response = res.status(500).json({ error: "Algo raro paso aca!!" });
+        }
+    } catch (error) {
+        response = res.status(400).send(`Error interno`);
+    }
     return response;
 });
+
 
 router.delete('/:id', authMiddleware, async (req, res) => {
     let response;
