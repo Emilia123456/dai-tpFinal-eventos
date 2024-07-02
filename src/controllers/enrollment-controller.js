@@ -6,7 +6,7 @@ const router = Router();
 const svc = new EnrollmentService();
 const eventService = new EventService();
 
-router.get('/:id/enrollment', async (req, res) => { //hola no funciona, se nos rompio todo no le gusto el id 
+router.get('/:id/enrollment', async (req, res) => { 
     let respuesta;
     let first_name = req.query.first_name;
     let last_name = req.query.last_name;
