@@ -6,6 +6,7 @@ import UserRouter from "./src/controllers/user-controller.js"
 import EventRouter from "./src/controllers/event-controller.js"
 import EnrollmentRouter from "./src/controllers/enrollment-controller.js"
 import LocationRouter from "./src/controllers/location-controller.js"
+import EventLocationRouter from "./src/controllers/event-location-controller.js"
 //import LoginRouter from "./src/controllers/login-controller.js"
 
 const app = express(); 
@@ -21,6 +22,7 @@ app.use('/api/category', CategoryRouter)
 app.use('/api/user', UserRouter);
 app.use('/api/event', EnrollmentRouter);
 app.use('/api/location', LocationRouter);
+app.use('/api/event-location', EventLocationRouter);
 //app.use(unknownEndpoint);
 
 app.listen(port,()=>{ 
