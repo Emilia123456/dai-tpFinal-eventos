@@ -16,13 +16,14 @@ export default class EventLocationService{
 
     insertEventLocation = async (dataEvent) => {
         const repo = new EventLocationRepository();
-        const returnArray = await repo.insertEvent(dataEvent);
+        const returnArray = await repo.insertEventLocation(dataEvent);
+        console.log(returnArray + "service")
         return returnArray;
     }
 
     updateEventLocation = async (dataEvent) => {
         const repo = new EventLocationRepository();
-        const returnArray = await repo.insertEvent(dataEvent);
+        const returnArray = await repo.updateEventLocation(dataEvent);
         return returnArray;
     }
 

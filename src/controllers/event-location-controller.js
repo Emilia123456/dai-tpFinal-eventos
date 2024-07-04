@@ -33,7 +33,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
 router.post('', authMiddleware, async (req, res) => {
     let response;
     const dataEvent = req.body;
-    dataEvent.id_user_creator = req.user.id;
+    dataEvent.id_creator_user = req.user.id;
     try {
         if (dataEvent.name.length < 3 || dataEvent.full_address.length < 3) {
             return res.status(400).json({ error: "El campo 'nombre' o 'full_address' debe tener al menos 3 caracteres." });
@@ -42,11 +42,14 @@ router.post('', authMiddleware, async (req, res) => {
         } else if (dataEvent.max_capacity < 0) {
             return res.status(400).json({ error: "La capacidad maxima ingresada no es valida" });
         }
-        const returnEntity = await svc.insertEventLocation(dataEvent);
-        if (returnEntity != null) {
-            response = res.status(201).json(returnEntity);
+        
+        const returnArray = await svc.insertEventLocation(dataEvent);
+        console.log(returnArray + "controller")
+        
+        if (returnArray != null) {
+            response = res.status(201).json(returnArray);
         } else {
-            response = res.status(500).json({ error: "Algo raro paso aca!!" });
+            response = res.status(500).json({ error: "Algo raro paso aca!! //es nulo" });
         }
     } catch (error) {
         response = res.status(400).send(`Error interno`);
@@ -67,6 +70,7 @@ router.put('', authMiddleware, async (req, res) => {
             return res.status(400).json({ error: "La capacidad maxima ingresada no es valida" });
         }
         const returnEntity = await svc.updateEventLocation(dataEvent);
+
         if (returnEntity != null) {
             response = res.status(200).json(returnEntity);
         } else {
