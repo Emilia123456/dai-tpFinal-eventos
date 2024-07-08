@@ -188,4 +188,25 @@ export default class EnrollmentRepository {
         return returnValue;
     }
 
+    rateEvent = async (eventId, rating, observations) =>{//necesita autenticacion
+        let returnArray =null;
+        const client = new Client(config_enrollment);
+        try {
+            await client.connect();
+            let sql = `PATCH event_enrollments SET rating=$2, observations=$3 WHERE id_event=$1`; 
+        
+                const values = [
+                    eventId,
+                    rating,
+                    observations
+                ];  
+                const result = await client.query(sql, values);
+                return result.rowCount; 
+            returnArray = result.rows;
+        } catch (error){
+            console.log(error);
+        }
+        return returnArray;
+    }
+
 }

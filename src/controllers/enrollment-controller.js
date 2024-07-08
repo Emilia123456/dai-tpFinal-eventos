@@ -112,6 +112,47 @@ router.delete('/:id/enrollment', authMiddleware, async (req, res) => {
 });
 
 
+router.patch('/:id/enrollment/:rating', authMiddleware, async (req, res) => {
+    const eventId = req.params.id;
+    const rating = parseInt(req.params.rating, 10);
+    const observations = req.body.observations;
+    const userId = req.user.id;
+
+    if (!rating || isNaN(rating) || rating < 1 || rating > 10) {
+        return res.status(400).send({ error: 'El rating tiene que ser entre el 1 y 10.' });
+    }
+
+    try {
+        const event = await eventService.searchEventById(eventId);
+        if (!event) {
+            return res.status(404).send({ error: 'Evento no encontrado' });
+        }
+
+        if (new Date(event.start_date) > new Date()) {
+            return res.status(400).send({ error: 'El evento no terminó' });
+        }
+
+        const isUserRegistered = await svc.isUserRegistered(eventId, userId);
+        if (!isUserRegistered) {
+            return res.status(400).json({ error: 'El usuario no está registrado en el evento, no puedes ratearlo' });
+        }
+
+        const rowsAffected = await svc.rateEvent(eventId, rating, observations);
+        if (rowsAffected > 0) {
+            return res.status(200).json({ message: 'Rating actualizado correctamente', rowsAffected });
+        } else {
+            return res.status(400).json({ error: 'No se pudo actualizar el rating' });
+        }
+
+    } catch (error) {
+        console.error(error); 
+        res.status(500).send({ error: 'Error interno' });
+    }
+});
+
+
+
+
 
 export default router;
 

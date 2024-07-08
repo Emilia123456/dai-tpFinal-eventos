@@ -79,7 +79,7 @@ export default class EventLocationRepository {
         try {
             await client.connect();
             //hasta aca el dataEvent llega completo, seguramente hay algo en el sql que le esta pasando null ña reespuesta miau
-            let sql = `UPDATE event_locations SET (id_location=$2, name=$3, full_address=$4, max_capacity=$5, latitude=$6, longitude=$7, id_creator_user=$8) WHERE id=$1`; // Array con los valores.
+            let sql = `UPDATE event_locations SET id_location=$2, name=$3, full_address=$4, max_capacity=$5, latitude=$6, longitude=$7, id_creator_user=$8 WHERE id=$1`; // Array con los valores.
 
                 const values = [
                     dataEvent.id,
@@ -101,13 +101,13 @@ export default class EventLocationRepository {
         return returnArray;
     }
     
-    deleteEvent = async (eventToEliminate) =>{//necesita autenticacion
+    deleteEvent = async (eventToEliminate) =>{
         let returnValue = 0;
         const client = new Client(config_event_location);
         
         try {
             await client.connect();
-            let sql = 'DELETE from event_locations WHERE id=$1'; // Array con los valores. 
+            let sql = 'DELETE * from event_locations WHERE id=$1'; // Array con los valores. 
             const values = [eventToEliminate];
 
             const output = await client.query(sql, values); 

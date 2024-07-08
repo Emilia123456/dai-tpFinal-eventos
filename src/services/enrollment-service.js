@@ -47,5 +47,13 @@ export default class EnrollmentService{
             console.log(returnArray) 
             return returnArray;
         }
+        
+        async rateEvent(eventId, rating, observations) {
+            const repo = new EnrollmentRepository();
+            const returnArray = await repo.rateEvent(eventId, rating, observations);
+            console.log(returnArray) 
+            return returnArray;
+        }
+        
     }
     

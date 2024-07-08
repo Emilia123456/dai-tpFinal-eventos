@@ -89,8 +89,10 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     const returnEntity = await svc.getAllById(eventToEliminate); 
 
     if (returnEntity != null){
-        const rowsAffected =await svc.deleteEvent(eventToEliminate);
-        response = res.status(200).json(rowsAffected);
+        const rowsAffected = await svc.deleteEvent(eventToEliminate);
+        if(rowsAffected>0){
+            response = res.status(200).json(rowsAffected);
+        }
     }else{
         response=res.status(404).send(`not found`);
     }
