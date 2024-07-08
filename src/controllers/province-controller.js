@@ -60,15 +60,23 @@ router.post('', async (req, res) => {
 router.put('', async (req, res) => {
     let respuesta;
     const datosProvincia = req.body
-    console.log('PUT')
+
+    if(!datosProvincia.name ||datosProvincia.name.length < 3){
+        respuesta = res.status(400).json('bad request el nombre tinene que ser mayor a 3 caracteres');
+
+    } else if (!datosProvincia.latitude || isNaN(datosProvincia.latitude) ){
+        respuesta = res.status(400).json('bad request la latitude no son numeros');
+
+    }else if (!datosProvincia.longitude || isNaN(datosProvincia.longitude) ){
+        respuesta = res.status(400).json('bad request el longitude no son numeros');
+    }
+
     const prov = await svc.getById(datosProvincia.id);
-    console.log('PUT Despues',prov)
+
     if(prov!=null){
         const rowCount = await svc.updateProvince(datosProvincia);
         if(rowCount>0){
             respuesta = res.status(200).json(rowCount);
-        }else{
-            respuesta=res.status(404).send(`Error interno`);
         }
     }else{
         respuesta=res.status(404).send(`No existe`);
