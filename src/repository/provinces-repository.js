@@ -26,6 +26,7 @@ export default class ProvinceRepository {
     getById = async (id) =>{
         let returnObject = null;
         const client = new Client(config_provinces);
+        console.log('EMILIIIIIIIIIIIIIIIII')
         try {
             await client.connect();
             let sql = 'SELECT * from provinces WHERE id=$1'; // Array con los valores. 
@@ -34,19 +35,16 @@ export default class ProvinceRepository {
             if(result.rows.length > 0){
                 returnObject = result.rows[0];
             }
-            
-            
             await client.end();
-            return returnObject;
-            
         } catch (error){
             console.log(error);
         }
+        console.log('returnObject', returnObject)
         return returnObject;
     }
 
     insertProvince = async (entity) =>{
-        let returnArray = null;
+        let rowCount = 0;
         const client = new Client(config_provinces);
         try {
             await client.connect();
@@ -57,11 +55,12 @@ export default class ProvinceRepository {
             const valores = [entity.name, entity.full_name, entity.latitude, entity.longitude, entity.display_order]; 
             const resultado = await client.query(sql, valores); 
             await client.end();
-            returnArray = resultado.rows;
+            rowCount = resultado.rowCount;
         } catch (error){
             console.log(error);
         }
-        return returnArray;
+        console.log('rowCount', rowCount);
+        return rowCount;
     }
     
 
@@ -90,16 +89,17 @@ export default class ProvinceRepository {
         return returnArray;
     }
 
-    deleteProvince = async (provAEliminar) =>{
-        let returnValue =0;
+    deleteProvince = async (provincia) =>{
+        let returnValue = 0;
         const client = new Client(config_provinces);
         
         try {
             await client.connect();
-            console.log('provAEliminar ', provAEliminar)
-            let sql = 'DELETE from provinces WHERE id=$1'; // Array con los valores. 
-            //const parametro = [provAEliminar.id]; 
-            const values = [provAEliminar];
+            console.log('provAEliminar ', provincia)
+            //NO FUNCIONA
+            let sql = 'DELETE FROM locations WHERE id_province = $1 DELETE FROM provinces WHERE id = $1';
+      
+            const values = [provincia.id, provincia.id_province];
 
             const output = await client.query(sql, values); 
             return output.rowCount;
@@ -109,6 +109,51 @@ export default class ProvinceRepository {
         }
         return returnValue;
     }
+
+    
+    getLocationsByIdProvince = async (id) =>{
+        let returnObject = null;
+        const client = new Client(config_provinces);
+        try {
+            await client.connect();
+            let sql = 'SELECT * from locations WHERE id_province=$1'; // Array con los valores. 
+            const values = [id]; 
+            let result = await client.query(sql, values); 
+            if(result.rows.length > 0){
+                returnObject = result.rows[0];
+            }          
+            await client.end();
+            return returnObject;
+            
+        } catch (error){
+            console.log(error);
+        }
+        return returnObject;
+    }
+    
+
+    getEventLocation = async (id) =>{
+        let returnObject = null;
+        const client = new Client(config_provinces);
+        console.log(id)
+        try {
+            await client.connect();
+            let sql = 'SELECT * FROM public.event_locations el INNER JOIN locations l ON l.id = el.id_location WHERE l.id = $1';
+            const values = [id]; 
+            let result = await client.query(sql, values); 
+            if(result.rows.length > 0){
+                returnObject = result.rows[0];
+            }
+                        
+            await client.end();
+            return returnObject;
+            
+        } catch (error){
+            console.log(error);
+        }
+        return returnObject;
+    }
+
 }
 
 

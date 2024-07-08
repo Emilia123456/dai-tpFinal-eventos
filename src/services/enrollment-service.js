@@ -6,9 +6,9 @@ export default class EnrollmentService{
             this.repo = new EnrollmentRepository;
         }
 
-        listParticipants = async (entity) => {
+        listParticipants = async (id, first_name, last_name, username, attended, rating) => {
             const repo = new EnrollmentRepository();
-            const returnArray = await repo.listParticipants(entity);
+            const returnArray = await repo.listParticipants(id, first_name, last_name, username, attended, rating);
             console.log(returnArray) 
             return returnArray;
         }

@@ -8,17 +8,23 @@ const eventService = new EventService();
 
 router.get('/:id/enrollment', async (req, res) => { 
     let respuesta;
+    let id = req.params.id;
     let first_name = req.query.first_name;
     let last_name = req.query.last_name;
     let username = req.query.username;
     let attended = req.query.attended;
     let rating = req.query.rating;
 
-    const returnArray = await svc.listParticipants(first_name, last_name, username, attended, rating);
-    if(returnArray!=null){
-        respuesta = res.status(200).json(returnArray);
-    }else{
-        respuesta=res.status(500).send(`Error interno`);
+    let event = await eventService.searchEventById(id);
+    if (event!=null){
+        const returnArray = await svc.listParticipants(id, first_name, last_name, username, attended, rating);
+        if(returnArray!=null){
+            respuesta = res.status(200).json(returnArray);
+        }else{
+            respuesta=res.status(500).send(`Error interno`);
+        }
+    }else {
+        respuesta=res.status(404).send(`No existe el evento`);
     }
     return respuesta;
 });
@@ -36,7 +42,6 @@ router.post('/:id/enrollment', authMiddleware, async (req, res) => {
     try {
 
 
-        //const event = await svc.create(eventId, userId);
         if (event == null) {
             console.log("el evento es nulo")
             return res.status(404).json({ error: 'Evento no encontrado' });

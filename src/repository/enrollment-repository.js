@@ -98,7 +98,7 @@ export default class EnrollmentRepository {
 
 
 
-    listParticipants = async (first_name, last_name, username, attended, rating) => {
+    listParticipants = async (id, first_name, last_name, username, attended, rating) => {
         let returnArray = null;
         const client = new Client(config_enrollment);
         try {
@@ -116,31 +116,39 @@ export default class EnrollmentRepository {
                         FROM
                             event_enrollments ee
                         INNER JOIN users u ON ee.id_user = u.id
-                        WHERE ee.id_event = 6 `; 
+                        WHERE ee.id_event = $1 `; 
     
             if (first_name!=null){
-                sql += `AND lower(u.first_name) LIKE lower('%${first_name}%') `; 
+                sql += `AND lower(u.first_name) LIKE lower('$2') `; 
             }
             if (last_name!=null){
-                sql += `AND lower(u.last_name) LIKE lower('%${last_name}%')  `; 
+                sql += `AND lower(u.last_name) LIKE lower('$3')  `; 
             }
             if (username!=null){
-                sql += `AND lower(u.username) LIKE lower('%${username}%') `;
+                sql += `AND lower(u.username) LIKE lower('$4%') `;
             }
             if (attended!=null){
-                 sql += `AND ee.attended = '${attended}' `;
+                 sql += `AND ee.attended = '$5' `;
             }
             if (rating!=null){
-                sql += `AND  ee.rating = '${rating}' `;
+                sql += `AND  ee.rating = '$6' `;
             }
+
+            const values = [
+                id,
+                first_name,
+                last_name,
+                username,
+                attended,
+                rating
+            ];  
     
-            let result = await client.query(sql);
+
+            let result = await client.query(sql, values);
             returnArray = result.rows;
     
         } catch (error){
             console.log(error);
-        } finally {
-            await client.end();
         }
         console.log(returnArray)
         return returnArray;
@@ -193,7 +201,7 @@ export default class EnrollmentRepository {
         const client = new Client(config_enrollment);
         try {
             await client.connect();
-            let sql = `PATCH event_enrollments SET rating=$2, observations=$3 WHERE id_event=$1`; 
+            let sql = `UPDATE event_enrollments SET rating=$2, observations=$3 WHERE id_event=$1`; 
         
                 const values = [
                     eventId,

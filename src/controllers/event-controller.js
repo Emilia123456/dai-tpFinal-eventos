@@ -1,8 +1,11 @@
 import { Router } from "express";
 import EventService from '../services/event-service.js'
+import EventLocationService from '../services/event-location-service.js'
 import authMiddleware from '../middlewares/auth-middleware.js'
 const router = Router();
 const svc = new EventService();
+const locationService = new EventLocationService();
+
 /*
 router.get('', async (req, res) => {
     let respuesta;
@@ -32,6 +35,7 @@ router.get('', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
+    console.log('GET BY ID Evento')
     let respuesta;
     let id = req.params.id;
     const returnEntity =await svc.searchEventById(id);
@@ -43,10 +47,19 @@ router.get('/:id', async (req, res) => {
     return respuesta;
 });
 
-router.post('', authMiddleware, async (req, res) => {
+router.post('', authMiddleware, async (req, res) => { //NO FUNCIONA
     let response;
     const dataEvent = req.body
     dataEvent.id_user_creator = req.user.id
+    if(dataEvent.name.lenght<3 || dataEvent.description.lenght<3){
+        response = res.status(400).json('tiene que ser mayor a tres caracteres el nombre y la descripcion');
+    }
+    const eventLocation = await locationService.getAllById(dataEvent.id_event_location);
+    if(dataEvent.max_assistance > eventLocation.max_capacity){
+        response = res.status(400).json('el max assistance es mayor al capaccity');
+    }else if(dataEvent.price < 0 || dataEvent.duration_in_minutes < 0){
+        response = res.status(400).json('el price o duration son menores a cero');
+    }
     const returnEntity = await svc.insertEvent(dataEvent)
     try{
         returnEntity!=null

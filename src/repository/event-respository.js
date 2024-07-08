@@ -132,6 +132,9 @@ export default class EventRepository {
             let result = await client.query(sql, values); 
             if(result.rows.length > 0){
                 returnObject = result.rows[0];
+                console.log('SI HAY ROWS')
+            }else {
+                console.log('NO HAY ROWS')
             }
             
             await client.end();
