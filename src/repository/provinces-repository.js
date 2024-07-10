@@ -26,10 +26,9 @@ export default class ProvinceRepository {
     getById = async (id) =>{
         let returnObject = null;
         const client = new Client(config_provinces);
-        console.log('EMILIIIIIIIIIIIIIIIII')
         try {
             await client.connect();
-            let sql = 'SELECT * from provinces WHERE id=$1'; // Array con los valores. 
+            let sql = 'SELECT * from provinces WHERE id=$1';
             const values = [id]; 
             let result = await client.query(sql, values); 
             if(result.rows.length > 0){
@@ -89,25 +88,25 @@ export default class ProvinceRepository {
         return returnArray;
     }
 
-    deleteProvince = async (provincia) =>{
-        let returnValue = 0;
+    deleteProvince = async (provAEliminar) =>{
+        let respuesta = null;
         const client = new Client(config_provinces);
-        
         try {
             await client.connect();
-            console.log('provAEliminar ', provincia)
             //NO FUNCIONA
-            let sql = 'DELETE FROM locations WHERE id_province = $1 DELETE FROM provinces WHERE id = $1';
-      
-            const values = [provincia.id, provincia.id_province];
-
-            const output = await client.query(sql, values); 
-            return output.rowCount;
+            let sql = 'DELETE FROM provinces WHERE id = $1';
+            console.log("sql", sql)
+            const values = [provAEliminar];
+            //la clave foranea todavia existe en locations por eso no lo puede eliminar
+            respuesta = await client.query(sql, values); 
+            await client.end();
+            
+            return respuesta.rowCount;
             
         } catch (error){
             console.log('error', error);
         }
-        return returnValue;
+        return respuesta;
     }
 
     

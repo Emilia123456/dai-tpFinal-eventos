@@ -90,8 +90,8 @@ router.delete('/:id', async (req, res) => {
     // VAmos a buscarlo! (provAEliminar)
     const provincia = await svc.getById(provAEliminar); 
     if (provincia != null){
-        const rowsAffected = await svc.deleteProvince(provincia);
-        if(respuesta>0){
+        const rowsAffected = await svc.deleteProvince(provAEliminar);
+        if(rowsAffected>0){
             respuesta = res.status(200).json(rowsAffected);
         }
     }else{

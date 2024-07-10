@@ -9,7 +9,6 @@ export default class ProvinceService{
     }
 
     getById = async (id) => {
-        console.log('EMILIIIIIIIIIIIIIIIII - getById')
         const returnObject = await repo.getById(id);
         return returnObject;
     }
@@ -24,8 +23,9 @@ export default class ProvinceService{
         return rowCount;
     }
 
-    deleteProvince = async (provincia) => {
-        const rowCount = await repo.deleteProvince(provincia);
+    deleteProvince = async (provAEliminar) => {
+        const repo = new ProvinceRepository();
+        const rowCount = await repo.deleteProvince(provAEliminar);
         return rowCount;
     }
 

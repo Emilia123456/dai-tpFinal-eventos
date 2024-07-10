@@ -62,8 +62,9 @@ router.post('', authMiddleware, async (req, res) => { //NO FUNCIONA
     }
     const returnEntity = await svc.insertEvent(dataEvent)
     try{
-        returnEntity!=null
+        if(returnEntity!=null){
         response = res.status(201).json(returnEntity);
+        }
     }catch{
         response=res.status(500).send(`Error interno`);
     }

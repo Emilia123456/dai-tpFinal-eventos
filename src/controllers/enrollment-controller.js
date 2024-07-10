@@ -21,7 +21,7 @@ router.get('/:id/enrollment', async (req, res) => {
         if(returnArray!=null){
             respuesta = res.status(200).json(returnArray);
         }else{
-            respuesta=res.status(500).send(`Error interno`);
+            respuesta=res.status(404).send(`No existe el participante que busca`);
         }
     }else {
         respuesta=res.status(404).send(`No existe el evento`);
