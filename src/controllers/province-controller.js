@@ -93,6 +93,8 @@ router.delete('/:id', async (req, res) => {
         const rowsAffected = await svc.deleteProvince(provAEliminar);
         if(rowsAffected>0){
             respuesta = res.status(200).json(rowsAffected);
+        }else{
+            respuesta = res.status(404).json('no se pudo eliminar')
         }
     }else{
         respuesta=res.status(404).send(`not found`);
